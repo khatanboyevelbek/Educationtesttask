@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 using Educationtesttask.Infrastructure.Data;
 using Educationtesttask.Infrastructure.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +16,7 @@ namespace Educationtesttask.Infrastructure.Repositories
 			this.dbContext = dbContext;
 			this.dbSet = dbContext.Set<T>();
 		}
-		
+
 		public async Task<T> AddAsync(T entity)
 		{
 			EntityEntry<T> addedEntity = await dbSet.AddAsync(entity);
