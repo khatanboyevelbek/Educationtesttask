@@ -47,6 +47,7 @@ namespace Educationtesttask.Api
 			services.AddTransient<ITeacherRepository, TeacherRepository>();
 			services.AddTransient<IStudentRepository, StudentRepository>();
 			services.AddTransient<IGradeRepository, GradeRepository>();
+			services.AddTransient<ISubjectRepository, SubjectRepository>();
 		}
 	}
 }
