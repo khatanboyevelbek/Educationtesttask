@@ -45,6 +45,7 @@ namespace Educationtesttask.Api
 		private static void RegisterRepositories(IServiceCollection services)
 		{
 			services.AddTransient<ITeacherRepository, TeacherRepository>();
+			services.AddTransient<IStudentRepository, StudentRepository>();
 		}
 	}
 }
