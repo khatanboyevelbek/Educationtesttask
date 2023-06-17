@@ -12,10 +12,7 @@ namespace Educationtesttask.Api
 			builder.Services.AddControllers();
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
-			builder.Services.AddDbContext<AppDbContext>(options =>
-			{
-				options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-			});
+			RegisterDbContext(builder.Services, builder.Configuration);
 
 			var app = builder.Build();
 
@@ -33,6 +30,14 @@ namespace Educationtesttask.Api
 			app.MapControllers();
 
 			app.Run();
+		}
+
+		private static void RegisterDbContext(IServiceCollection services, IConfiguration configuration)
+		{
+			services.AddDbContext<AppDbContext>(options =>
+			{
+				options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+			});
 		}
 	}
 }
