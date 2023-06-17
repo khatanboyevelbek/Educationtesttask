@@ -1,4 +1,6 @@
 using Educationtesttask.Infrastructure.Data;
+using Educationtesttask.Infrastructure.Interfaces;
+using Educationtesttask.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Educationtesttask.Api
@@ -13,6 +15,7 @@ namespace Educationtesttask.Api
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
 			RegisterDbContext(builder.Services, builder.Configuration);
+			RegisterRepositories(builder.Services);
 
 			var app = builder.Build();
 
@@ -38,6 +41,10 @@ namespace Educationtesttask.Api
 			{
 				options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
 			});
+		}
+		private static void RegisterRepositories(IServiceCollection services)
+		{
+			services.AddTransient<ITeacherRepository, TeacherRepository>();
 		}
 	}
 }
