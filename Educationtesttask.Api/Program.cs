@@ -2,6 +2,7 @@ using Educationtesttask.Infrastructure.Data;
 using Educationtesttask.Infrastructure.Interfaces;
 using Educationtesttask.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace Educationtesttask.Api
 {
@@ -10,6 +11,9 @@ namespace Educationtesttask.Api
 		public static void Main(string[] args)
 		{
 			var builder = WebApplication.CreateBuilder(args);
+
+			builder.Host.UseSerilog((context, configuration) => 
+				configuration.ReadFrom.Configuration(context.Configuration));
 
 			builder.Services.AddControllers();
 			builder.Services.AddEndpointsApiExplorer();
@@ -25,11 +29,9 @@ namespace Educationtesttask.Api
 				app.UseSwaggerUI();
 			}
 
+			app.UseSerilogRequestLogging();
 			app.UseHttpsRedirection();
-
 			app.UseAuthorization();
-
-
 			app.MapControllers();
 
 			app.Run();
