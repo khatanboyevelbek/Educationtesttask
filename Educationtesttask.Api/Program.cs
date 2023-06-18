@@ -1,4 +1,5 @@
 using Educationtesttask.Application.Logging;
+using Educationtesttask.Application.Validations;
 using Educationtesttask.Infrastructure.Data;
 using Educationtesttask.Infrastructure.Interfaces;
 using Educationtesttask.Infrastructure.Repositories;
@@ -22,6 +23,7 @@ namespace Educationtesttask.Api
 			RegisterDbContext(builder.Services, builder.Configuration);
 			RegisterRepositories(builder.Services);
 			builder.Services.AddScoped<ISerilogLogger, SerilogLogger>();
+			builder.Services.AddTransient<TeacherViewModelValidation>();
 
 			var app = builder.Build();
 
