@@ -1,3 +1,4 @@
+using Educationtesttask.Application.Logging;
 using Educationtesttask.Infrastructure.Data;
 using Educationtesttask.Infrastructure.Interfaces;
 using Educationtesttask.Infrastructure.Repositories;
@@ -20,6 +21,7 @@ namespace Educationtesttask.Api
 			builder.Services.AddSwaggerGen();
 			RegisterDbContext(builder.Services, builder.Configuration);
 			RegisterRepositories(builder.Services);
+			builder.Services.AddScoped<ISerilogLogger, SerilogLogger>();
 
 			var app = builder.Build();
 
