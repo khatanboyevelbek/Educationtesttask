@@ -38,6 +38,14 @@ namespace Educationtesttask.Infrastructure.Data
 				.WithMany(t => t.Subjects)
 				.HasForeignKey(s => s.TeacherId)
 				.OnDelete(DeleteBehavior.Restrict);
+
+			modelBuilder.Entity<Student>()
+				.HasIndex(s => s.Email)
+				.IsUnique();
+
+			modelBuilder.Entity<Teacher>()
+				.HasIndex(s => s.Email)
+				.IsUnique();
 		}
 	}
 }
