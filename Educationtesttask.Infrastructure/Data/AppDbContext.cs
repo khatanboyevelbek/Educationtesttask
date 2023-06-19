@@ -36,7 +36,7 @@ namespace Educationtesttask.Infrastructure.Data
 			modelBuilder.Entity<Subject>()
 				.HasOne(s => s.Teacher)
 				.WithMany(t => t.Subjects)
-				.HasForeignKey(s => s.TeacharId)
+				.HasForeignKey(s => s.TeacherId)
 				.OnDelete(DeleteBehavior.Restrict);
 		}
 	}

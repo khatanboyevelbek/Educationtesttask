@@ -14,7 +14,7 @@ namespace Educationtesttask.Domain.Entities
 		public Guid StudentId { get; set; }
 		public Student Student { get; set; }
 
-		public Guid TeacharId { get; set; }
+		public Guid TeacherId { get; set; }
 		public Teacher Teacher { get; set; }
 
 		public DateTimeOffset CreatedDate { get; set; }

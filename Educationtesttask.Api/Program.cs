@@ -22,8 +22,8 @@ namespace Educationtesttask.Api
 			builder.Services.AddSwaggerGen();
 			RegisterDbContext(builder.Services, builder.Configuration);
 			RegisterRepositories(builder.Services);
-			builder.Services.AddScoped<ISerilogLogger, SerilogLogger>();
-			builder.Services.AddTransient<TeacherViewModelValidation>();
+			RegisterUtilities(builder.Services);
+			
 
 			var app = builder.Build();
 
@@ -54,6 +54,11 @@ namespace Educationtesttask.Api
 			services.AddTransient<IStudentRepository, StudentRepository>();
 			services.AddTransient<IGradeRepository, GradeRepository>();
 			services.AddTransient<ISubjectRepository, SubjectRepository>();
+		}
+		private static void RegisterUtilities(IServiceCollection services)
+		{
+			services.AddScoped<ISerilogLogger, SerilogLogger>();
+			services.AddTransient<TeacherViewModelValidation>();
 		}
 	}
 }
