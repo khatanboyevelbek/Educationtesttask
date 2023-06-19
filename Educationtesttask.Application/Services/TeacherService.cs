@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 using Educationtesttask.Application.Interfaces;
 using Educationtesttask.Application.Logging;
 using Educationtesttask.Application.Validations;
 using Educationtesttask.Application.ViewModels;
 using Educationtesttask.Domain.Entities;
+using Educationtesttask.Domain.Exceptions.Teachers;
 using Educationtesttask.Infrastructure.Interfaces;
 using FluentValidation.Results;
+using Microsoft.Data.SqlClient;
 
 namespace Educationtesttask.Application.Services
 {
@@ -34,7 +31,19 @@ namespace Educationtesttask.Application.Services
 			try
 			{
 				ValidationResult validationResult = validator.Validate(viewModel);
+
+				if (viewModel is null)
+				{
+					throw new NullTeacherException();
+				}
+
 				Validate(validationResult);
+				bool existingTeacher = this.teacherRepository.SelectAllAsync().Any(t => t.Email == viewModel.Email);
+
+				if(existingTeacher)
+				{
+					throw new AlreadyExistTeacherException();
+				}
 
 				var teacher = new Teacher()
 				{
@@ -51,9 +60,35 @@ namespace Educationtesttask.Application.Services
 				Teacher addeddData = await this.teacherRepository.AddAsync(teacher);
 				return addeddData;
             }
-			catch (Exception ex)
+			catch (InvalidTeacherException invalidTeacherException)
 			{
-				throw;
+				this.logger.LogError(invalidTeacherException);
+
+				throw new TeacherValidationException(invalidTeacherException);
+			}
+			catch(NullTeacherException nullTeacherException)
+			{
+				this.logger.LogError(nullTeacherException);
+
+				throw new TeacherValidationException(nullTeacherException);
+			}
+			catch(AlreadyExistTeacherException alreadyExistTeacherException)
+			{
+				this.logger.LogCritical(alreadyExistTeacherException);
+
+				throw new TeacherDependencyException(alreadyExistTeacherException);
+			}
+			catch(SqlException sqlException)
+			{
+				this.logger.LogCritical(sqlException);
+
+				throw new FailedTeacherStorageException(sqlException);
+			}
+			catch(Exception exception)
+			{
+				this.logger.LogCritical(exception);
+
+				throw new FailedTeacherServiceException(exception);
 			}
 		}
 
