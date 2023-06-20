@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using Educationtesttask.Application.Interfaces;
 using Educationtesttask.Application.Logging;
 using Educationtesttask.Application.Validations;
@@ -92,24 +93,147 @@ namespace Educationtesttask.Application.Services
 			}
 		}
 
-		public Task<bool> DeleteAsync(Guid id)
+		public async Task<bool> DeleteAsync(Guid id)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				Teacher existingEntity = await this.teacherRepository.SelectByIdAsync(id);
+
+				if(existingEntity is null)
+				{
+					throw new TeacherNotFoundException();
+				}
+
+				return await this.teacherRepository.DeleteAsync(existingEntity);
+			}
+			catch (TeacherNotFoundException teacherNotFoundException)
+			{
+				this.logger.LogError(teacherNotFoundException);
+
+				throw new TeacherDependencyException(teacherNotFoundException);
+			}
+			catch (SqlException sqlException)
+			{
+				this.logger.LogCritical(sqlException);
+
+				throw new FailedTeacherStorageException(sqlException);
+			}
+			catch (Exception exception)
+			{
+				this.logger.LogCritical(exception);
+
+				throw new FailedTeacherServiceException(exception);
+			}
 		}
 
-		public Task<Teacher> ModifyAsync(TeacherViewModel viewModel)
+		public async Task<Teacher> ModifyAsync(TeacherViewModel viewModel)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				ValidationResult validationResult = validator.Validate(viewModel);
+				Validate(validationResult);
+
+				var retrieveExistingTeacher = await this.teacherRepository.SelectByIdAsync(viewModel.Id);
+
+				if(retrieveExistingTeacher is null)
+				{
+					throw new TeacherNotFoundException();
+				}
+
+				retrieveExistingTeacher.FirstName = viewModel.FirstName;
+				retrieveExistingTeacher.LastName = viewModel.LastName;
+				retrieveExistingTeacher.PhoneNumber = viewModel.PhoneNumber;
+				retrieveExistingTeacher.Email = viewModel.Email;
+				retrieveExistingTeacher.BirthDate = viewModel.BirthDate;
+				retrieveExistingTeacher.UpdatedDate = DateTimeOffset.Now;
+
+				var updatedTeacher = await this.teacherRepository.UpdateAsync(retrieveExistingTeacher);
+
+				return updatedTeacher;
+			}
+			catch (InvalidTeacherException invalidTeacherException)
+			{
+				this.logger.LogError(invalidTeacherException);
+
+				throw new TeacherValidationException(invalidTeacherException);
+			}
+			catch (NullTeacherException nullTeacherException)
+			{
+				this.logger.LogError(nullTeacherException);
+
+				throw new TeacherValidationException(nullTeacherException);
+			}
+			catch (TeacherNotFoundException teacherNotFoundException)
+			{
+				this.logger.LogError(teacherNotFoundException);
+
+				throw new TeacherDependencyException(teacherNotFoundException);
+			}
+			catch (SqlException sqlException)
+			{
+				this.logger.LogCritical(sqlException);
+
+				throw new FailedTeacherStorageException(sqlException);
+			}
+			catch (Exception exception)
+			{
+				this.logger.LogCritical(exception);
+
+				throw new FailedTeacherServiceException(exception);
+			}
 		}
 
 		public IQueryable<Teacher> RetrieveAll(Expression<Func<Teacher, bool>> filter = null)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				return this.teacherRepository.SelectAllAsync(filter);
+			}
+			catch (SqlException sqlException)
+			{
+				this.logger.LogCritical(sqlException);
+
+				throw new FailedTeacherStorageException(sqlException);
+			}
+			catch (Exception exception)
+			{
+				this.logger.LogCritical(exception);
+
+				throw new FailedTeacherServiceException(exception);
+			}
 		}
 
-		public Task<Teacher> RetrieveByIdAsync(Guid id)
+		public async Task<Teacher> RetrieveByIdAsync(Guid id)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				var retrieveTeacher = await this.teacherRepository.SelectByIdAsync(id);
+
+				if (retrieveTeacher is null)
+				{
+					throw new TeacherNotFoundException();
+				}
+
+				return retrieveTeacher;
+			}
+			catch (TeacherNotFoundException teacherNotFoundException)
+			{
+				this.logger.LogError(teacherNotFoundException);
+
+				throw new TeacherDependencyException(teacherNotFoundException);
+			}
+			catch (SqlException sqlException)
+			{
+				this.logger.LogCritical(sqlException);
+
+				throw new FailedTeacherStorageException(sqlException);
+			}
+			catch (Exception exception)
+			{
+				this.logger.LogCritical(exception);
+
+				throw new FailedTeacherServiceException(exception);
+			}
 		}
 	}
 }
