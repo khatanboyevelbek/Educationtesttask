@@ -66,6 +66,7 @@ namespace Educationtesttask.Api
 		private static void RegisterServices(IServiceCollection services)
 		{
 			services.AddTransient<ITeacherService, TeacherService>();
+			services.AddTransient<IStudentService, StudentService>();
 		}
 	}
 }
