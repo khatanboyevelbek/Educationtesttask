@@ -30,13 +30,12 @@ namespace Educationtesttask.Application.Services
 		{
 			try
 			{
-				ValidationResult validationResult = validator.Validate(viewModel);
-
 				if (viewModel is null)
 				{
 					throw new NullTeacherException();
 				}
 
+				ValidationResult validationResult = validator.Validate(viewModel);
 				Validate(validationResult);
 				bool existingTeacher = this.teacherRepository.SelectAllAsync().Any(t => t.Email == viewModel.Email);
 
@@ -74,7 +73,7 @@ namespace Educationtesttask.Application.Services
 			}
 			catch(AlreadyExistTeacherException alreadyExistTeacherException)
 			{
-				this.logger.LogCritical(alreadyExistTeacherException);
+				this.logger.LogError(alreadyExistTeacherException);
 
 				throw new TeacherDependencyException(alreadyExistTeacherException);
 			}
