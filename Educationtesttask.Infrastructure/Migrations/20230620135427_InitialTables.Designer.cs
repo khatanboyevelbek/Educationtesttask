@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Educationtesttask.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230617055159_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20230620135427_InitialTables")]
+    partial class InitialTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,36 +24,6 @@ namespace Educationtesttask.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("Educationtesttask.Domain.Entities.Grade", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTimeOffset>("CreatedDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<Guid>("StudentId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("SubjectId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTimeOffset>("UpdatedDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("Value")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StudentId");
-
-                    b.HasIndex("SubjectId");
-
-                    b.ToTable("Grades");
-                });
 
             modelBuilder.Entity("Educationtesttask.Domain.Entities.Student", b =>
                 {
@@ -95,6 +65,24 @@ namespace Educationtesttask.Infrastructure.Migrations
                     b.ToTable("Students");
                 });
 
+            modelBuilder.Entity("Educationtesttask.Domain.Entities.StudentSubject", b =>
+                {
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SubjectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Grade")
+                        .HasColumnType("int");
+
+                    b.HasKey("StudentId", "SubjectId");
+
+                    b.HasIndex("SubjectId");
+
+                    b.ToTable("StudentSubjects");
+                });
+
             modelBuilder.Entity("Educationtesttask.Domain.Entities.Subject", b =>
                 {
                     b.Property<Guid>("Id")
@@ -108,10 +96,7 @@ namespace Educationtesttask.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("StudentId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("TeacharId")
+                    b.Property<Guid>("TeacherId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTimeOffset>("UpdatedDate")
@@ -119,9 +104,7 @@ namespace Educationtesttask.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StudentId");
-
-                    b.HasIndex("TeacharId");
+                    b.HasIndex("TeacherId");
 
                     b.ToTable("Subjects");
                 });
@@ -162,16 +145,16 @@ namespace Educationtesttask.Infrastructure.Migrations
                     b.ToTable("Teachers");
                 });
 
-            modelBuilder.Entity("Educationtesttask.Domain.Entities.Grade", b =>
+            modelBuilder.Entity("Educationtesttask.Domain.Entities.StudentSubject", b =>
                 {
                     b.HasOne("Educationtesttask.Domain.Entities.Student", "Student")
-                        .WithMany("Grades")
+                        .WithMany("StudentSubjects")
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Educationtesttask.Domain.Entities.Subject", "Subject")
-                        .WithMany()
+                        .WithMany("StudentSubjects")
                         .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -183,28 +166,23 @@ namespace Educationtesttask.Infrastructure.Migrations
 
             modelBuilder.Entity("Educationtesttask.Domain.Entities.Subject", b =>
                 {
-                    b.HasOne("Educationtesttask.Domain.Entities.Student", "Student")
-                        .WithMany("Subjects")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Educationtesttask.Domain.Entities.Teacher", "Teacher")
                         .WithMany("Subjects")
-                        .HasForeignKey("TeacharId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Student");
 
                     b.Navigation("Teacher");
                 });
 
             modelBuilder.Entity("Educationtesttask.Domain.Entities.Student", b =>
                 {
-                    b.Navigation("Grades");
+                    b.Navigation("StudentSubjects");
+                });
 
-                    b.Navigation("Subjects");
+            modelBuilder.Entity("Educationtesttask.Domain.Entities.Subject", b =>
+                {
+                    b.Navigation("StudentSubjects");
                 });
 
             modelBuilder.Entity("Educationtesttask.Domain.Entities.Teacher", b =>

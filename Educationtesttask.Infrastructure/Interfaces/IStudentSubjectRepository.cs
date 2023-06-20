@@ -7,7 +7,7 @@ using Educationtesttask.Domain.Entities;
 
 namespace Educationtesttask.Infrastructure.Interfaces
 {
-	public interface IGradeRepository : IGenericRepository<Grade>
+	public interface IStudentSubjectRepository : IGenericRepository<StudentSubject>
 	{
 	}
 }

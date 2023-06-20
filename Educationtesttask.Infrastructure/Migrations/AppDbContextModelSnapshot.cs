@@ -22,36 +22,6 @@ namespace Educationtesttask.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Educationtesttask.Domain.Entities.Grade", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTimeOffset>("CreatedDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<Guid>("StudentId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("SubjectId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTimeOffset>("UpdatedDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("Value")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StudentId");
-
-                    b.HasIndex("SubjectId");
-
-                    b.ToTable("Grades");
-                });
-
             modelBuilder.Entity("Educationtesttask.Domain.Entities.Student", b =>
                 {
                     b.Property<Guid>("Id")
@@ -66,7 +36,7 @@ namespace Educationtesttask.Infrastructure.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -89,10 +59,25 @@ namespace Educationtesttask.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Email")
-                        .IsUnique();
-
                     b.ToTable("Students");
+                });
+
+            modelBuilder.Entity("Educationtesttask.Domain.Entities.StudentSubject", b =>
+                {
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SubjectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Grade")
+                        .HasColumnType("int");
+
+                    b.HasKey("StudentId", "SubjectId");
+
+                    b.HasIndex("SubjectId");
+
+                    b.ToTable("StudentSubjects");
                 });
 
             modelBuilder.Entity("Educationtesttask.Domain.Entities.Subject", b =>
@@ -108,9 +93,6 @@ namespace Educationtesttask.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("StudentId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("TeacherId")
                         .HasColumnType("uniqueidentifier");
 
@@ -118,8 +100,6 @@ namespace Educationtesttask.Infrastructure.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("StudentId");
 
                     b.HasIndex("TeacherId");
 
@@ -140,7 +120,7 @@ namespace Educationtesttask.Infrastructure.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -159,22 +139,19 @@ namespace Educationtesttask.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Email")
-                        .IsUnique();
-
                     b.ToTable("Teachers");
                 });
 
-            modelBuilder.Entity("Educationtesttask.Domain.Entities.Grade", b =>
+            modelBuilder.Entity("Educationtesttask.Domain.Entities.StudentSubject", b =>
                 {
                     b.HasOne("Educationtesttask.Domain.Entities.Student", "Student")
-                        .WithMany("Grades")
+                        .WithMany("StudentSubjects")
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Educationtesttask.Domain.Entities.Subject", "Subject")
-                        .WithMany()
+                        .WithMany("StudentSubjects")
                         .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -186,28 +163,23 @@ namespace Educationtesttask.Infrastructure.Migrations
 
             modelBuilder.Entity("Educationtesttask.Domain.Entities.Subject", b =>
                 {
-                    b.HasOne("Educationtesttask.Domain.Entities.Student", "Student")
-                        .WithMany("Subjects")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Educationtesttask.Domain.Entities.Teacher", "Teacher")
                         .WithMany("Subjects")
                         .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Student");
 
                     b.Navigation("Teacher");
                 });
 
             modelBuilder.Entity("Educationtesttask.Domain.Entities.Student", b =>
                 {
-                    b.Navigation("Grades");
+                    b.Navigation("StudentSubjects");
+                });
 
-                    b.Navigation("Subjects");
+            modelBuilder.Entity("Educationtesttask.Domain.Entities.Subject", b =>
+                {
+                    b.Navigation("StudentSubjects");
                 });
 
             modelBuilder.Entity("Educationtesttask.Domain.Entities.Teacher", b =>

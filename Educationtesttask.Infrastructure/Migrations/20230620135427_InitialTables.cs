@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Educationtesttask.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialTables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -54,8 +54,7 @@ namespace Educationtesttask.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StudentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TeacharId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TeacherId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     UpdatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
                 },
@@ -63,41 +62,32 @@ namespace Educationtesttask.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Subjects", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Subjects_Students_StudentId",
-                        column: x => x.StudentId,
-                        principalTable: "Students",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Subjects_Teachers_TeacharId",
-                        column: x => x.TeacharId,
+                        name: "FK_Subjects_Teachers_TeacherId",
+                        column: x => x.TeacherId,
                         principalTable: "Teachers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Grades",
+                name: "StudentSubjects",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SubjectId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     StudentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Value = table.Column<int>(type: "int", nullable: false),
-                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    UpdatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
+                    SubjectId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Grade = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Grades", x => x.Id);
+                    table.PrimaryKey("PK_StudentSubjects", x => new { x.StudentId, x.SubjectId });
                     table.ForeignKey(
-                        name: "FK_Grades_Students_StudentId",
+                        name: "FK_StudentSubjects_Students_StudentId",
                         column: x => x.StudentId,
                         principalTable: "Students",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Grades_Subjects_SubjectId",
+                        name: "FK_StudentSubjects_Subjects_SubjectId",
                         column: x => x.SubjectId,
                         principalTable: "Subjects",
                         principalColumn: "Id",
@@ -105,37 +95,27 @@ namespace Educationtesttask.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Grades_StudentId",
-                table: "Grades",
-                column: "StudentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Grades_SubjectId",
-                table: "Grades",
+                name: "IX_StudentSubjects_SubjectId",
+                table: "StudentSubjects",
                 column: "SubjectId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Subjects_StudentId",
+                name: "IX_Subjects_TeacherId",
                 table: "Subjects",
-                column: "StudentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Subjects_TeacharId",
-                table: "Subjects",
-                column: "TeacharId");
+                column: "TeacherId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Grades");
-
-            migrationBuilder.DropTable(
-                name: "Subjects");
+                name: "StudentSubjects");
 
             migrationBuilder.DropTable(
                 name: "Students");
+
+            migrationBuilder.DropTable(
+                name: "Subjects");
 
             migrationBuilder.DropTable(
                 name: "Teachers");

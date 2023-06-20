@@ -14,38 +14,27 @@ namespace Educationtesttask.Infrastructure.Data
 		public virtual DbSet<Teacher> Teachers { get; set; }
 		public virtual DbSet<Student> Students { get; set; }
 		public virtual DbSet<Subject> Subjects { get; set; }
-		public virtual DbSet<Grade> Grades { get; set; }
+		public virtual DbSet<StudentSubject> StudentSubjects { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
-			// Relationship between Grade and Student
-			modelBuilder.Entity<Grade>()
-				.HasOne(g => g.Student)
-				.WithMany(s => s.Grades)
-				.HasForeignKey(g => g.StudentId)
-				.OnDelete(DeleteBehavior.Restrict);
+			modelBuilder.Entity<StudentSubject>()
+			.HasKey(ss => new { ss.StudentId, ss.SubjectId });
 
-			// Relationship between Subject and Student
-			modelBuilder.Entity<Subject>()
-				.HasOne(s => s.Student)
-				.WithMany(s => s.Subjects)
-				.HasForeignKey(s => s.StudentId)
-				.OnDelete(DeleteBehavior.Restrict);
+			modelBuilder.Entity<StudentSubject>()
+				.HasOne(ss => ss.Student)
+				.WithMany(s => s.StudentSubjects)
+				.HasForeignKey(ss => ss.StudentId);
 
-			// Relationship between Subject and Teacher
+			modelBuilder.Entity<StudentSubject>()
+				.HasOne(ss => ss.Subject)
+				.WithMany(s => s.StudentSubjects)
+				.HasForeignKey(ss => ss.SubjectId);
+
 			modelBuilder.Entity<Subject>()
 				.HasOne(s => s.Teacher)
 				.WithMany(t => t.Subjects)
-				.HasForeignKey(s => s.TeacherId)
-				.OnDelete(DeleteBehavior.Restrict);
-
-			modelBuilder.Entity<Student>()
-				.HasIndex(s => s.Email)
-				.IsUnique();
-
-			modelBuilder.Entity<Teacher>()
-				.HasIndex(s => s.Email)
-				.IsUnique();
+				.HasForeignKey(s => s.TeacherId);
 		}
 	}
 }

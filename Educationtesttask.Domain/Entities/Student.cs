@@ -10,15 +10,9 @@
 		public DateTime BirthDate { get; set; }
 		public string StudentRegNumber { get; set; }
 
-		public virtual ICollection<Subject> Subjects { get; set; }
-		public virtual ICollection<Grade> Grades { get; set; }
+		public virtual ICollection<StudentSubject> StudentSubjects { get; set; }
 
 		public DateTimeOffset CreatedDate { get; set; }
 		public DateTimeOffset UpdatedDate { get; set; }
-
-		public override string ToString()
-		{
-			return $"{Id} - {FirstName} - {LastName} - {PhoneNumber} - {Email} - {BirthDate} - {StudentRegNumber}";
-		}
 	}
 }

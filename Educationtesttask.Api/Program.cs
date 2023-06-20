@@ -55,13 +55,14 @@ namespace Educationtesttask.Api
 		{
 			services.AddTransient<ITeacherRepository, TeacherRepository>();
 			services.AddTransient<IStudentRepository, StudentRepository>();
-			services.AddTransient<IGradeRepository, GradeRepository>();
+			services.AddTransient<IStudentSubjectRepository, StudentSubjectRepository>();
 			services.AddTransient<ISubjectRepository, SubjectRepository>();
 		}
 		private static void RegisterUtilities(IServiceCollection services)
 		{
 			services.AddScoped<ISerilogLogger, SerilogLogger>();
 			services.AddTransient<TeacherViewModelValidation>();
+			services.AddTransient<StudentViewModelValidation>();
 		}
 		private static void RegisterServices(IServiceCollection services)
 		{

@@ -4,9 +4,9 @@ using Educationtesttask.Infrastructure.Interfaces;
 
 namespace Educationtesttask.Infrastructure.Repositories
 {
-	public class GradeRepository : GenericRepository<Grade>, IGradeRepository
+	public class StudentSubjectRepository : GenericRepository<StudentSubject>, IStudentSubjectRepository
 	{
-		public GradeRepository(AppDbContext appDbContext) 
+		public StudentSubjectRepository (AppDbContext appDbContext)
 			: base(appDbContext)
 		{ }
 	}

@@ -19,10 +19,5 @@ namespace Educationtesttask.Domain.Entities
 
 		public DateTimeOffset CreatedDate { get; set; }
 		public DateTimeOffset UpdatedDate { get; set; }
-
-		public override string ToString()
-		{
-			return $"{Id} - {FirstName} - {LastName} - {PhoneNumber} - {Email} - {BirthDate}";
-		}
 	}
 }
