@@ -1,4 +1,6 @@
-﻿namespace Educationtesttask.Domain.Entities
+﻿using Educationtesttask.Domain.Enums;
+
+namespace Educationtesttask.Domain.Entities
 {
 	public class Student
 	{
@@ -9,6 +11,7 @@
 		public string Email { get; set; }
 		public DateTime BirthDate { get; set; }
 		public string StudentRegNumber { get; set; }
+		public Role Role { get; set; }
 
 		public virtual ICollection<StudentSubject> StudentSubjects { get; set; }
 
