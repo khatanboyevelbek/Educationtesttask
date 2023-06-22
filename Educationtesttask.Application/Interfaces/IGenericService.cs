@@ -7,14 +7,15 @@ using System.Threading.Tasks;
 
 namespace Educationtesttask.Application.Interfaces
 {
-	public interface IGenericService<T, U> 
-		where T : class
-		where U : class
+	public interface IGenericService<TEntity, TCreate, TUpdate> 
+		where TEntity : class
+		where TUpdate : class
+		where TCreate : class
 	{
-		public Task<T> AddAsync(U viewModel);
-		public IQueryable<T> RetrieveAll(Expression<Func<T, bool>> filter = null);
-		public Task<T> RetrieveByIdAsync(Guid id);
-		public Task<T> ModifyAsync(U viewModel);
+		public Task<TEntity> AddAsync(TCreate viewModel);
+		public IQueryable<TEntity> RetrieveAll(Expression<Func<TEntity, bool>> filter = null);
+		public Task<TEntity> RetrieveByIdAsync(Guid id);
+		public Task<TEntity> ModifyAsync(TUpdate viewModel);
 		public Task<bool> DeleteAsync(Guid id);
 	}
 }

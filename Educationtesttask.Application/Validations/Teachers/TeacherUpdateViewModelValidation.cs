@@ -1,12 +1,20 @@
-﻿using Educationtesttask.Application.ViewModels;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Educationtesttask.Application.ViewModels.Teachers;
 using FluentValidation;
 
-namespace Educationtesttask.Application.Validations
+namespace Educationtesttask.Application.Validations.Teachers
 {
-	public class TeacherViewModelValidation : AbstractValidator<TeacherViewModel>
+	public class TeacherUpdateViewModelValidation : AbstractValidator<TeacherUpdateViewModel>
 	{
-		public TeacherViewModelValidation() 
+		public TeacherUpdateViewModelValidation() 
 		{
+			RuleFor(tvm => tvm.Id).NotNull().NotEmpty()
+				.WithMessage("Please provide the Id of an existing teacher");
+
 			RuleFor(tvm => tvm.FirstName).NotNull().NotEmpty()
 				.WithMessage("Please provide a valid firstname");
 

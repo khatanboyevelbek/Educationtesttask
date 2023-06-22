@@ -2,6 +2,10 @@ using Educationtesttask.Application.Interfaces;
 using Educationtesttask.Application.Logging;
 using Educationtesttask.Application.Services;
 using Educationtesttask.Application.Validations;
+using Educationtesttask.Application.Validations.Students;
+using Educationtesttask.Application.Validations.Subjects;
+using Educationtesttask.Application.Validations.Teachers;
+using Educationtesttask.Application.ViewModels.Subjects;
 using Educationtesttask.Infrastructure.Data;
 using Educationtesttask.Infrastructure.Interfaces;
 using Educationtesttask.Infrastructure.Repositories;
@@ -10,7 +14,7 @@ using Serilog;
 
 namespace Educationtesttask.Api
 {
-	public class Program
+    public class Program
 	{
 		public static void Main(string[] args)
 		{
@@ -61,8 +65,12 @@ namespace Educationtesttask.Api
 		private static void RegisterUtilities(IServiceCollection services)
 		{
 			services.AddScoped<ISerilogLogger, SerilogLogger>();
-			services.AddTransient<TeacherViewModelValidation>();
-			services.AddTransient<StudentViewModelValidation>();
+			services.AddTransient<TeacherCreateViewModelValidation>();
+			services.AddTransient<TeacherUpdateViewModelValidation>();
+			services.AddTransient<StudentCreateViewModelValidation>();
+			services.AddTransient<StudentUpdateViewModelValidation>();
+			services.AddTransient<SubjectCreateViewModelValidation>();
+			services.AddTransient<SubjectUpdateViewModelValidation>();
 		}
 		private static void RegisterServices(IServiceCollection services)
 		{

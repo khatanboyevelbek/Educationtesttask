@@ -1,8 +1,8 @@
 ﻿using System.Linq.Expressions;
 using Educationtesttask.Application.Interfaces;
 using Educationtesttask.Application.Logging;
-using Educationtesttask.Application.Validations;
-using Educationtesttask.Application.ViewModels;
+using Educationtesttask.Application.Validations.Students;
+using Educationtesttask.Application.ViewModels.Students;
 using Educationtesttask.Domain.Entities;
 using Educationtesttask.Domain.Exceptions.Students;
 using Educationtesttask.Domain.Exceptions.Teachers;
@@ -12,21 +12,24 @@ using Microsoft.Data.SqlClient;
 
 namespace Educationtesttask.Application.Services
 {
-	public partial class StudentService : IStudentService
+    public partial class StudentService : IStudentService
 	{
 		private readonly IStudentRepository studentRepository;
 		private readonly ISerilogLogger logger;
-		private readonly StudentViewModelValidation validator;
+		private readonly StudentCreateViewModelValidation validatorCreate;
+		private readonly StudentUpdateViewModelValidation validatorUpdate;
 
 		public StudentService(IStudentRepository studentRepository, ISerilogLogger logger,
-			StudentViewModelValidation validator)
+			StudentCreateViewModelValidation validatorCreate,
+			StudentUpdateViewModelValidation validatorUpdate)
 		{
 			this.studentRepository = studentRepository;
 			this.logger = logger;
-			this.validator = validator;
+			this.validatorCreate = validatorCreate;
+			this.validatorUpdate = validatorUpdate;
 		}
 
-		public async Task<Student> AddAsync(StudentViewModel viewModel)
+		public async Task<Student> AddAsync(StudentCreateViewModel viewModel)
 		{
 			try
 			{
@@ -35,7 +38,7 @@ namespace Educationtesttask.Application.Services
 					throw new NullStudentException();
 				}
 
-				ValidationResult validationResult = validator.Validate(viewModel);
+				ValidationResult validationResult = validatorCreate.Validate(viewModel);
 				Validate(validationResult);
 
 				bool existingStudent = this.studentRepository.SelectAllAsync().Any(s => s.Email == viewModel.Email);
@@ -128,11 +131,16 @@ namespace Educationtesttask.Application.Services
 			}
 		}
 
-		public async Task<Student> ModifyAsync(StudentViewModel viewModel)
+		public async Task<Student> ModifyAsync(StudentUpdateViewModel viewModel)
 		{
 			try
 			{
-				ValidationResult validationResult = validator.Validate(viewModel);
+				if (viewModel is null)
+				{
+					throw new NullStudentException();
+				}
+
+				ValidationResult validationResult = validatorUpdate.Validate(viewModel);
 				Validate(validationResult);
 
 				var retrieveExistingStudent = await this.studentRepository.SelectByIdAsync(viewModel.Id);
