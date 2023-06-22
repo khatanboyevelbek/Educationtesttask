@@ -1,6 +1,7 @@
 using Educationtesttask.Application.Interfaces;
 using Educationtesttask.Application.Logging;
 using Educationtesttask.Application.Services;
+using Educationtesttask.Application.Services.Subjects;
 using Educationtesttask.Application.Validations;
 using Educationtesttask.Application.Validations.Students;
 using Educationtesttask.Application.Validations.Subjects;
@@ -76,6 +77,7 @@ namespace Educationtesttask.Api
 		{
 			services.AddTransient<ITeacherService, TeacherService>();
 			services.AddTransient<IStudentService, StudentService>();
+			services.AddTransient<ISubjectService, SubjectService>();
 		}
 	}
 }
