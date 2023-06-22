@@ -157,9 +157,7 @@ namespace Educationtesttask.Application.Services
 				retrieveExistingStudent.BirthDate = viewModel.BirthDate;
 				retrieveExistingStudent.UpdatedDate = DateTimeOffset.Now;
 
-				var updatedStudent = await this.studentRepository.UpdateAsync(retrieveExistingStudent);
-
-				return updatedStudent;
+				return await this.studentRepository.UpdateAsync(retrieveExistingStudent);
 
 			}
 			catch (InvalidStudentException invalidStudentException)

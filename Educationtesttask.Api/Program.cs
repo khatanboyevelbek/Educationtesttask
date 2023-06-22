@@ -1,9 +1,11 @@
 using Educationtesttask.Application.Interfaces;
 using Educationtesttask.Application.Logging;
 using Educationtesttask.Application.Services;
+using Educationtesttask.Application.Services.StudentSubjects;
 using Educationtesttask.Application.Services.Subjects;
 using Educationtesttask.Application.Validations;
 using Educationtesttask.Application.Validations.Students;
+using Educationtesttask.Application.Validations.StudentSubjects;
 using Educationtesttask.Application.Validations.Subjects;
 using Educationtesttask.Application.Validations.Teachers;
 using Educationtesttask.Application.ViewModels.Subjects;
@@ -72,12 +74,14 @@ namespace Educationtesttask.Api
 			services.AddTransient<StudentUpdateViewModelValidation>();
 			services.AddTransient<SubjectCreateViewModelValidation>();
 			services.AddTransient<SubjectUpdateViewModelValidation>();
+			services.AddTransient<StudentSubjectViewModelValidation>();
 		}
 		private static void RegisterServices(IServiceCollection services)
 		{
 			services.AddTransient<ITeacherService, TeacherService>();
 			services.AddTransient<IStudentService, StudentService>();
 			services.AddTransient<ISubjectService, SubjectService>();
+			services.AddTransient<IStudentSubjectService, StudentSubjectService>();
 		}
 	}
 }

@@ -25,8 +25,8 @@ namespace Educationtesttask.Infrastructure.Repositories
 			return addedEntity.Entity;
 		}
 
-		public async Task<T> SelectByIdAsync(Guid id) =>
-			await this.dbSet.FindAsync(id);
+		public async Task<T> SelectByIdAsync(Guid id1) =>
+			await this.dbSet.FindAsync(id1);
 
 		public IQueryable<T> SelectAllAsync(Expression<Func<T, bool>> filter = null) =>
 			this.dbSet.Where(filter);
