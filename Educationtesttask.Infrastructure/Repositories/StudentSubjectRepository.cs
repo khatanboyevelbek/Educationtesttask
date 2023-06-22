@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Educationtesttask.Infrastructure.Repositories
 {
-	public class StudentSubjectRepository : IStudentSubjectRepository<StudentSubject>
+	public class StudentSubjectRepository : IStudentSubjectRepository
 	{
 		private readonly AppDbContext dbContext;
 		private readonly DbSet<StudentSubject> dbSet;
