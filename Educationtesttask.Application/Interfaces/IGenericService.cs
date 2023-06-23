@@ -13,7 +13,7 @@ namespace Educationtesttask.Application.Interfaces
 		where TCreate : class
 	{
 		public Task<TEntity> AddAsync(TCreate viewModel);
-		public IQueryable<TEntity> RetrieveAll(Expression<Func<TEntity, bool>> filter = null);
+		public IQueryable<TEntity> RetrieveAll(Expression<Func<TEntity, bool>> filter);
 		public Task<TEntity> RetrieveByIdAsync(Guid id);
 		public Task<TEntity> ModifyAsync(TUpdate viewModel);
 		public Task<bool> DeleteAsync(Guid id);

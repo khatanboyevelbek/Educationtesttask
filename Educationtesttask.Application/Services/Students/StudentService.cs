@@ -5,14 +5,13 @@ using Educationtesttask.Application.Validations.Students;
 using Educationtesttask.Application.ViewModels.Students;
 using Educationtesttask.Domain.Entities;
 using Educationtesttask.Domain.Exceptions.Students;
-using Educationtesttask.Domain.Exceptions.Teachers;
 using Educationtesttask.Infrastructure.Interfaces;
 using FluentValidation.Results;
 using Microsoft.Data.SqlClient;
 
 namespace Educationtesttask.Application.Services
 {
-    public partial class StudentService : IStudentService
+	public partial class StudentService : IStudentService
 	{
 		private readonly IStudentRepository studentRepository;
 		private readonly ISerilogLogger logger;
@@ -192,7 +191,7 @@ namespace Educationtesttask.Application.Services
 			}
 		}
 
-		public IQueryable<Student> RetrieveAll(Expression<Func<Student, bool>> filter = null)
+		public IQueryable<Student> RetrieveAll(Expression<Func<Student, bool>> filter)
 		{
 			try
 			{
