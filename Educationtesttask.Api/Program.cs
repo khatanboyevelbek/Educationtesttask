@@ -1,3 +1,4 @@
+using System.Text;
 using Educationtesttask.Application.Interfaces;
 using Educationtesttask.Application.Logging;
 using Educationtesttask.Application.Services;
@@ -10,7 +11,9 @@ using Educationtesttask.Application.Validations.Teachers;
 using Educationtesttask.Infrastructure.Data;
 using Educationtesttask.Infrastructure.Interfaces;
 using Educationtesttask.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
 
 namespace Educationtesttask.Api
@@ -31,7 +34,8 @@ namespace Educationtesttask.Api
 			RegisterRepositories(builder.Services);
 			RegisterUtilities(builder.Services);
 			RegisterServices(builder.Services);
-			
+			RegisterAuthentication(builder.Services, builder.Configuration);
+
 
 			var app = builder.Build();
 
@@ -43,6 +47,7 @@ namespace Educationtesttask.Api
 
 			app.UseSerilogRequestLogging();
 			app.UseHttpsRedirection();
+			app.UseAuthentication();
 			app.UseAuthorization();
 			app.MapControllers();
 
@@ -80,6 +85,25 @@ namespace Educationtesttask.Api
 			services.AddTransient<IStudentService, StudentService>();
 			services.AddTransient<ISubjectService, SubjectService>();
 			services.AddTransient<IStudentSubjectService, StudentSubjectService>();
+		}
+
+		private static void RegisterAuthentication(IServiceCollection services, IConfiguration configuration)
+		{
+			services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+				.AddJwtBearer(options =>
+				{
+					options.TokenValidationParameters = new TokenValidationParameters()
+					{
+						ValidateIssuer = true,
+						ValidateAudience = true,
+						ValidateLifetime = true,
+						ValidateIssuerSigningKey = true,
+						ValidIssuer = configuration["Jwt:ValidIssuer"],
+						ValidAudience = configuration["Jwt:ValidAudience"],
+						IssuerSigningKey = new SymmetricSecurityKey(
+							Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
+					};
+				});
 		}
 	}
 }
