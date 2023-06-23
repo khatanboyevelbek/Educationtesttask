@@ -58,9 +58,9 @@ namespace Educationtesttask.Application.Services.Subjects
 				    UpdatedDate = DateTimeOffset.Now
 				};
 
-				Subject saveSubject = await this.subjectRepository.AddAsync(subject);
+				Subject savedSubject = await this.subjectRepository.AddAsync(subject);
 
-				return saveSubject;
+				return savedSubject;
 			}
 			catch (NullSubjectException nullSubjectException)
 			{
