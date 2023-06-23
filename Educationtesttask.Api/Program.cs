@@ -3,12 +3,10 @@ using Educationtesttask.Application.Logging;
 using Educationtesttask.Application.Services;
 using Educationtesttask.Application.Services.StudentSubjects;
 using Educationtesttask.Application.Services.Subjects;
-using Educationtesttask.Application.Validations;
 using Educationtesttask.Application.Validations.Students;
 using Educationtesttask.Application.Validations.StudentSubjects;
 using Educationtesttask.Application.Validations.Subjects;
 using Educationtesttask.Application.Validations.Teachers;
-using Educationtesttask.Application.ViewModels.Subjects;
 using Educationtesttask.Infrastructure.Data;
 using Educationtesttask.Infrastructure.Interfaces;
 using Educationtesttask.Infrastructure.Repositories;
@@ -17,7 +15,7 @@ using Serilog;
 
 namespace Educationtesttask.Api
 {
-    public class Program
+	public class Program
 	{
 		public static void Main(string[] args)
 		{
