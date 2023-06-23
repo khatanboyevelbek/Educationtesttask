@@ -186,11 +186,13 @@ namespace Educationtesttask.Application.Services
 			}
 		}
 
-		public IQueryable<Teacher> RetrieveAll(Expression<Func<Teacher, bool>> filter = null)
+		public IQueryable<Teacher> RetrieveAll(Expression<Func<Teacher, bool>> filter)
 		{
 			try
 			{
-				return this.teacherRepository.SelectAllAsync(filter);
+				var result = this.teacherRepository.SelectAllAsync(filter);
+
+				return result;
 			}
 			catch (SqlException sqlException)
 			{
