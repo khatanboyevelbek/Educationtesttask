@@ -92,7 +92,7 @@ namespace Educationtesttask.Api.Controllers.Subjects
 			{
 				var result = await this.subjectService.ModifyAsync(viewModel);
 
-				return Ok(result);
+				return NoContent();
 			}
 			catch (SubjectValidationException exception)
 			{

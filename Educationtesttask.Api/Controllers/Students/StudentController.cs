@@ -93,7 +93,7 @@ namespace Educationtesttask.Api.Controllers.Students
 			{
 				var result = await this.studentService.ModifyAsync(viewModel);
 
-				return Ok(result);
+				return NoContent();
 			}
 			catch (StudentValidationException exception)
 			{

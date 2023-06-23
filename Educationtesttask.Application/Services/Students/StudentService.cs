@@ -54,6 +54,7 @@ namespace Educationtesttask.Application.Services
 					LastName = viewModel.LastName,
 					PhoneNumber = viewModel.PhoneNumber,
 					Email = viewModel.Email,
+					Password = viewModel.Password,
 					BirthDate = viewModel.BirthDate,
 					StudentRegNumber = viewModel.StudentRegNumber,
 					CreatedDate = DateTimeOffset.Now,
@@ -153,6 +154,7 @@ namespace Educationtesttask.Application.Services
 				retrieveExistingStudent.LastName = viewModel.LastName;
 				retrieveExistingStudent.PhoneNumber = viewModel.PhoneNumber;
 				retrieveExistingStudent.Email = viewModel.Email;
+				retrieveExistingStudent.Password = viewModel.Password;
 				retrieveExistingStudent.BirthDate = viewModel.BirthDate;
 				retrieveExistingStudent.UpdatedDate = DateTimeOffset.Now;
 

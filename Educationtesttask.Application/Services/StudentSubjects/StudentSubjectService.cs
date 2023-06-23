@@ -159,7 +159,7 @@ namespace Educationtesttask.Application.Services.StudentSubjects
 			}
 		}
 
-		public IQueryable<StudentSubject> RetrieveAll(Expression<Func<StudentSubject, bool>> filter = null)
+		public IQueryable<StudentSubject> RetrieveAll(Expression<Func<StudentSubject, bool>> filter)
 		{
 			try
 			{

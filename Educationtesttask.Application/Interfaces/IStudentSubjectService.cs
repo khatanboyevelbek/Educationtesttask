@@ -13,7 +13,7 @@ namespace Educationtesttask.Application.Interfaces
 	public interface IStudentSubjectService
 	{
 		public Task<StudentSubject> AddAsync(StudentSubjectViewModel viewModel);
-		public IQueryable<StudentSubject> RetrieveAll(Expression<Func<StudentSubject, bool>> filter = null);
+		public IQueryable<StudentSubject> RetrieveAll(Expression<Func<StudentSubject, bool>> filter);
 		public Task<StudentSubject> RetrieveByIdAsync(Guid id1, Guid id2);
 		public Task<StudentSubject> ModifyAsync(StudentSubjectViewModel viewModel);
 		public Task<bool> DeleteAsync(Guid id1, Guid id2);

@@ -20,7 +20,10 @@ namespace Educationtesttask.Application.Validations.Teachers
             RuleFor(tvm => tvm.Email).NotNull().NotEmpty().EmailAddress()
                 .WithMessage("Please provide a valid email address");
 
-            RuleFor(tvm => tvm.BirthDate).NotNull().NotEmpty()
+			RuleFor(s => s.Password).NotNull().Must(p => p.Length >= 8)
+				.WithMessage("Password should be minumum 8 characters");
+
+			RuleFor(tvm => tvm.BirthDate).NotNull().NotEmpty()
                 .WithMessage("Please provide a valid birth date");
         }
     }

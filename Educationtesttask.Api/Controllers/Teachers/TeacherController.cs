@@ -95,7 +95,8 @@ namespace Educationtesttask.Api.Controllers.Teachers
 			try
 			{
 				var result = await this.teacherService.ModifyAsync(viewModel);
-				return Ok(result);
+
+				return NoContent();
 			}
 			catch (TeacherValidationException exception)
 			{
