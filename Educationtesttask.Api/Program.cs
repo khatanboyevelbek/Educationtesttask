@@ -3,6 +3,7 @@ using Educationtesttask.Application.Interfaces;
 using Educationtesttask.Application.Logging;
 using Educationtesttask.Application.Security;
 using Educationtesttask.Application.Services;
+using Educationtesttask.Application.Services.Account;
 using Educationtesttask.Application.Services.StudentSubjects;
 using Educationtesttask.Application.Services.Subjects;
 using Educationtesttask.Application.Validations.Account;
@@ -90,6 +91,7 @@ namespace Educationtesttask.Api
 			services.AddTransient<IStudentSubjectService, StudentSubjectService>();
 			services.AddTransient<IAuthManager, AuthManager>();
 			services.AddTransient<ISecurityPassword, SecurityPassword>();
+			services.AddTransient<IAuthService, AuthService>();
 		}
 
 		private static void RegisterAuthentication(IServiceCollection services, IConfiguration configuration)
