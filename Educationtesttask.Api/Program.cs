@@ -87,6 +87,7 @@ namespace Educationtesttask.Api
 			services.AddTransient<ISubjectService, SubjectService>();
 			services.AddTransient<IStudentSubjectService, StudentSubjectService>();
 			services.AddTransient<IAuthManager, AuthManager>();
+			services.AddTransient<ISecurityPassword, SecurityPassword>();
 		}
 
 		private static void RegisterAuthentication(IServiceCollection services, IConfiguration configuration)
