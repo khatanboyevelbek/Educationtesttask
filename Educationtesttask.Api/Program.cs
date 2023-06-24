@@ -5,6 +5,7 @@ using Educationtesttask.Application.Security;
 using Educationtesttask.Application.Services;
 using Educationtesttask.Application.Services.StudentSubjects;
 using Educationtesttask.Application.Services.Subjects;
+using Educationtesttask.Application.Validations.Account;
 using Educationtesttask.Application.Validations.Students;
 using Educationtesttask.Application.Validations.StudentSubjects;
 using Educationtesttask.Application.Validations.Subjects;
@@ -19,7 +20,7 @@ using Serilog;
 
 namespace Educationtesttask.Api
 {
-	public class Program
+    public class Program
 	{
 		public static void Main(string[] args)
 		{
@@ -79,6 +80,7 @@ namespace Educationtesttask.Api
 			services.AddTransient<SubjectCreateViewModelValidation>();
 			services.AddTransient<SubjectUpdateViewModelValidation>();
 			services.AddTransient<StudentSubjectViewModelValidation>();
+			services.AddTransient<LoginModelValidation>();
 		}
 		private static void RegisterServices(IServiceCollection services)
 		{

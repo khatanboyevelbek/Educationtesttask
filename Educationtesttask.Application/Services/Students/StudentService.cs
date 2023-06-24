@@ -4,6 +4,7 @@ using Educationtesttask.Application.Logging;
 using Educationtesttask.Application.Validations.Students;
 using Educationtesttask.Application.ViewModels.Students;
 using Educationtesttask.Domain.Entities;
+using Educationtesttask.Domain.Enums;
 using Educationtesttask.Domain.Exceptions.Students;
 using Educationtesttask.Infrastructure.Interfaces;
 using FluentValidation.Results;
@@ -17,15 +18,18 @@ namespace Educationtesttask.Application.Services
 		private readonly ISerilogLogger logger;
 		private readonly StudentCreateViewModelValidation validatorCreate;
 		private readonly StudentUpdateViewModelValidation validatorUpdate;
+		private readonly ISecurityPassword securityPassword;
 
 		public StudentService(IStudentRepository studentRepository, ISerilogLogger logger,
 			StudentCreateViewModelValidation validatorCreate,
-			StudentUpdateViewModelValidation validatorUpdate)
+			StudentUpdateViewModelValidation validatorUpdate, 
+			ISecurityPassword securityPassword)
 		{
 			this.studentRepository = studentRepository;
 			this.logger = logger;
 			this.validatorCreate = validatorCreate;
 			this.validatorUpdate = validatorUpdate;
+			this.securityPassword = securityPassword;
 		}
 
 		public async Task<Student> AddAsync(StudentCreateViewModel viewModel)
@@ -54,7 +58,8 @@ namespace Educationtesttask.Application.Services
 					LastName = viewModel.LastName,
 					PhoneNumber = viewModel.PhoneNumber,
 					Email = viewModel.Email,
-					Password = viewModel.Password,
+					Password = this.securityPassword.Encrypt(viewModel.Password),
+					Role = Role.Student,
 					BirthDate = viewModel.BirthDate,
 					StudentRegNumber = viewModel.StudentRegNumber,
 					CreatedDate = DateTimeOffset.Now,
@@ -154,7 +159,7 @@ namespace Educationtesttask.Application.Services
 				retrieveExistingStudent.LastName = viewModel.LastName;
 				retrieveExistingStudent.PhoneNumber = viewModel.PhoneNumber;
 				retrieveExistingStudent.Email = viewModel.Email;
-				retrieveExistingStudent.Password = viewModel.Password;
+				retrieveExistingStudent.Password = this.securityPassword.Encrypt(viewModel.Password);
 				retrieveExistingStudent.BirthDate = viewModel.BirthDate;
 				retrieveExistingStudent.UpdatedDate = DateTimeOffset.Now;
 

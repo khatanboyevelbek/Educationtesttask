@@ -5,10 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BCrypt.Net;
+using Educationtesttask.Application.Interfaces;
 
 namespace Educationtesttask.Application.Security
 {
-	public class SecurityPassword : ISecurityPassword
+    public class SecurityPassword : ISecurityPassword
 	{
 		public string Encrypt(string password)
 		{
