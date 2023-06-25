@@ -28,7 +28,7 @@ namespace Educationtesttask.Infrastructure.Repositories
 		public async Task<T> SelectByIdAsync(Guid id1) =>
 			await this.dbSet.FindAsync(id1);
 
-		public IQueryable<T> SelectAllAsync(Expression<Func<T, bool>> filter = null)
+		public virtual IQueryable<T> SelectAllAsync(Expression<Func<T, bool>> filter = null)
 		{
 			return filter is null ? this.dbSet : this.dbSet.Where(filter);
 		}

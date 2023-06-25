@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Educationtesttask.Domain.Entities;
@@ -23,6 +24,12 @@ namespace Educationtesttask.Infrastructure.Repositories
 		public async Task<Student> SelectStudentByEmail(string email)
 		{
 			return this.appDbContext.Set<Student>().FirstOrDefault(s => s.Email == email);
+		}
+
+		public override IQueryable<Student> SelectAllAsync(Expression<Func<Student, bool>> filter = null)
+		{
+			return filter is null ? this.appDbContext.Set<Student>().Include(s => s.StudentSubjects) :
+				this.appDbContext.Set<Student>().Where(filter).Include(s => s.StudentSubjects);
 		}
 	}
 }

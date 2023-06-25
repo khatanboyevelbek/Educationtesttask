@@ -1,4 +1,6 @@
 using System.Text;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 using Educationtesttask.Application.Interfaces;
 using Educationtesttask.Application.Logging;
 using Educationtesttask.Application.Security;
@@ -20,6 +22,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using Newtonsoft.Json;
 
 namespace Educationtesttask.Api
 {
@@ -32,7 +35,10 @@ namespace Educationtesttask.Api
 			builder.Host.UseSerilog((context, configuration) => 
 				configuration.ReadFrom.Configuration(context.Configuration));
 
-			builder.Services.AddControllers();
+			builder.Services.AddControllers().AddNewtonsoftJson(options =>
+			{
+				options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+			});
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
 			builder.Services.AddHttpContextAccessor();
@@ -118,7 +124,7 @@ namespace Educationtesttask.Api
 				});
 		}
 
-		private static void ConfigureSwagger(this IServiceCollection services,
+		private static void ConfigureSwagger(IServiceCollection services,
 			IConfiguration configuration)
 		{
 			services.AddSwaggerGen(c =>
