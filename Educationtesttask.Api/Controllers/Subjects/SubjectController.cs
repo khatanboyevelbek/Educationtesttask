@@ -1,6 +1,8 @@
 ﻿using Educationtesttask.Application.Interfaces;
 using Educationtesttask.Application.ViewModels.Subjects;
+using Educationtesttask.Domain.Enums;
 using Educationtesttask.Domain.Exceptions.Subjects;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
 
@@ -14,6 +16,7 @@ namespace Educationtesttask.Api.Controllers.Subjects
 		public SubjectController(ISubjectService subjectService) =>
 			this.subjectService = subjectService;
 
+		[Authorize(Roles = nameof(Role.Teacher))]
 		[HttpPost]
 		public async Task<ActionResult> PostSubject(SubjectCreateViewModel viewModel)
 		{
@@ -42,6 +45,7 @@ namespace Educationtesttask.Api.Controllers.Subjects
 			}
 		}
 
+		[Authorize(Roles = nameof(Role.Teacher) + "," + nameof(Role.Student))]
 		[HttpGet]
 		public ActionResult GetAllSubjects()
 		{
@@ -61,6 +65,7 @@ namespace Educationtesttask.Api.Controllers.Subjects
 			}
 		}
 
+		[Authorize(Roles = nameof(Role.Teacher) + "," + nameof(Role.Student))]
 		[HttpGet("{id}")]
 		public async Task<ActionResult> GetSubject(Guid id)
 		{
@@ -85,6 +90,7 @@ namespace Educationtesttask.Api.Controllers.Subjects
 			}
 		}
 
+		[Authorize(Roles = nameof(Role.Teacher))]
 		[HttpPut]
 		public async Task<ActionResult> PutSubject(SubjectUpdateViewModel viewModel)
 		{
@@ -113,6 +119,7 @@ namespace Educationtesttask.Api.Controllers.Subjects
 			}
 		}
 
+		[Authorize(Roles = nameof(Role.Teacher))]
 		[HttpDelete("{id}")]
 		public async Task<ActionResult> DeleteSubject(Guid id)
 		{
