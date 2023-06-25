@@ -50,11 +50,9 @@ namespace Educationtesttask.Application.Services.Account
 				ValidationResult validationResult = this.validator.Validate(loginModel);
 				Validate(validationResult);
 
-				Student existingStudent = this.studentRepository.SelectAllAsync()
-					.FirstOrDefault(s => s.Email == loginModel.Email && 
-						this.securityPassword.Verify(loginModel.Password, s.Password));
+				IQueryable<Student> RetrieveAllStudents = this.studentRepository.SelectAllAsync();
 
-				if(existingStudent is not null)
+				if (existingStudent is not null)
 				{
 					string token = this.authManager.GenerateToken(existingStudent);
 
@@ -112,8 +110,7 @@ namespace Educationtesttask.Application.Services.Account
 				Validate(validationResult);
 
 				Teacher existingTeacher = this.teacherRepository.SelectAllAsync()
-					.FirstOrDefault(t => t.Email == loginModel.Email &&
-						this.securityPassword.Verify(loginModel.Password, t.Password));
+					.FirstOrDefault(t => t.Email == loginModel.Email && this.securityPassword.Verify(loginModel.Password, t.Password));
 
 				if (existingTeacher is not null)
 				{

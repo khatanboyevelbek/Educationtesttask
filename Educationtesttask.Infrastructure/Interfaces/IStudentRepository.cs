@@ -8,5 +8,7 @@ using Educationtesttask.Domain.Entities;
 namespace Educationtesttask.Infrastructure.Interfaces
 {
 	public interface IStudentRepository : IGenericRepository<Student>
-	{ }
+	{
+		public Task<Student> SelectStudentByEmail (string email);
+	}
 }
