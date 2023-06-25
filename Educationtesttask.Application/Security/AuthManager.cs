@@ -19,9 +19,9 @@ namespace Educationtesttask.Application.Security
 		public string GenerateToken(Student student)
         {
             var securityKey = 
-                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:ValidIssuer"]));
+                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
 
-            var cridentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            var cridentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512);
 
             var claims = new[]
             {
@@ -43,9 +43,9 @@ namespace Educationtesttask.Application.Security
         public string GenerateToken(Teacher teacher)
         {
 			var securityKey =
-				new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:ValidIssuer"]));
+				new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
 
-			var cridentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+			var cridentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512);
 
 			var claims = new[]
 			{

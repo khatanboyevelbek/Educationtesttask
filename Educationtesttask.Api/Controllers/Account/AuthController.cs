@@ -45,5 +45,34 @@ namespace Educationtesttask.Api.Controllers.Account
 				return InternalServerError(exception.InnerException);
 			}
 		}
+
+		[HttpPost]
+		[Route("teacher/login")]
+		public async Task<ActionResult> PostLoginTeacher(LoginModel loginModel)
+		{
+			try
+			{
+				LoginSuccessResponse result = await this.authService.LoginTeacher(loginModel);
+
+				return Ok(result);
+			}
+			catch (LoginModelValidationException exception)
+			{
+				return BadRequest(exception.InnerException);
+			}
+			catch (LoginModelDependencyValidationException exception)
+				when (exception.InnerException is LoginModelUnauthorizedException)
+			{
+				return Unauthorized(exception.InnerException);
+			}
+			catch (FailedLoginModelStorageException exception)
+			{
+				return InternalServerError(exception.InnerException);
+			}
+			catch (FailedLoginModelServiceException exception)
+			{
+				return InternalServerError(exception.InnerException);
+			}
+		}
 	}
 }

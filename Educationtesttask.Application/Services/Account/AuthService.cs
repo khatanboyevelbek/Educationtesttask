@@ -50,9 +50,10 @@ namespace Educationtesttask.Application.Services.Account
 				ValidationResult validationResult = this.validator.Validate(loginModel);
 				Validate(validationResult);
 
-				IQueryable<Student> RetrieveAllStudents = this.studentRepository.SelectAllAsync();
+				Student existingStudent = await this.studentRepository.SelectStudentByEmail(loginModel.Email);
+				bool verifyPassword = this.securityPassword.Verify(loginModel.Password, existingStudent.Password);
 
-				if (existingStudent is not null)
+				if ((existingStudent is not null) && verifyPassword)
 				{
 					string token = this.authManager.GenerateToken(existingStudent);
 
@@ -61,6 +62,8 @@ namespace Educationtesttask.Application.Services.Account
 						Email = existingStudent.Email,
 						Token = token
 					};
+
+					return loginSuccessResponse;
 				}
 
 				throw new LoginModelUnauthorizedException();
@@ -109,10 +112,10 @@ namespace Educationtesttask.Application.Services.Account
 				ValidationResult validationResult = this.validator.Validate(loginModel);
 				Validate(validationResult);
 
-				Teacher existingTeacher = this.teacherRepository.SelectAllAsync()
-					.FirstOrDefault(t => t.Email == loginModel.Email && this.securityPassword.Verify(loginModel.Password, t.Password));
+				Teacher existingTeacher = await this.teacherRepository.SelectTeacherByEmail(loginModel.Email);
+				bool verifyPassword = this.securityPassword.Verify(loginModel.Password, existingTeacher.Password);
 
-				if (existingTeacher is not null)
+				if ((existingTeacher is not null) && verifyPassword)
 				{
 					string token = this.authManager.GenerateToken(existingTeacher);
 
@@ -121,6 +124,8 @@ namespace Educationtesttask.Application.Services.Account
 						Email = existingTeacher.Email,
 						Token = token
 					};
+
+					return loginSuccessResponse;
 				}
 
 				throw new LoginModelUnauthorizedException();
