@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Educationtesttask.Domain.Entities.Account;
 
-namespace Educationtesttask.Application.Security
+namespace Educationtesttask.Application.Interfaces
 {
-	public interface IHttpContextCurrentUserProvider
-	{
-		UserClaims GetCurrentUser();
-	}
+    public interface IHttpContextCurrentUserProvider
+    {
+        UserClaims GetCurrentUser();
+    }
 }

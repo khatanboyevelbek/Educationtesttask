@@ -4,6 +4,7 @@ using Educationtesttask.Application.Logging;
 using Educationtesttask.Application.Validations.Subjects;
 using Educationtesttask.Application.ViewModels.Subjects;
 using Educationtesttask.Domain.Entities;
+using Educationtesttask.Domain.Entities.Account;
 using Educationtesttask.Domain.Exceptions.Students;
 using Educationtesttask.Domain.Exceptions.Subjects;
 using Educationtesttask.Infrastructure.Interfaces;
@@ -19,15 +20,18 @@ namespace Educationtesttask.Application.Services.Subjects
 		private readonly ISerilogLogger logger;
 		private readonly SubjectCreateViewModelValidation validatorCreate;
 		private readonly SubjectUpdateViewModelValidation validatorUpdate;
+		private readonly IHttpContextCurrentUserProvider httpContextCurrentUserProvider;
 
 		public SubjectService(ISubjectRepository subjectRepository, ISerilogLogger logger, 
 			SubjectCreateViewModelValidation validatorCreate, 
-			SubjectUpdateViewModelValidation validatorUpdate)
+			SubjectUpdateViewModelValidation validatorUpdate,
+			IHttpContextCurrentUserProvider httpContextCurrentUserProvider)
 		{
 			this.subjectRepository = subjectRepository;
 			this.logger = logger;
 			this.validatorCreate = validatorCreate;
 			this.validatorUpdate = validatorUpdate;
+			this.httpContextCurrentUserProvider = httpContextCurrentUserProvider;
 		}
 
 		public async Task<Subject> AddAsync(SubjectCreateViewModel viewModel)
@@ -50,10 +54,13 @@ namespace Educationtesttask.Application.Services.Subjects
 					throw new AlreadyExistSubjectException();
 				}
 
+				UserClaims currentUser = this.httpContextCurrentUserProvider.GetCurrentUser();
+
 				var subject = new Subject()
 				{
 					Id = Guid.NewGuid(),
 					Name = viewModel.Name,
+					TeacherId = currentUser.UserId,
 					CreatedDate = DateTimeOffset.Now,
 				    UpdatedDate = DateTimeOffset.Now
 				};

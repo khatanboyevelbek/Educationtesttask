@@ -14,6 +14,7 @@ using Educationtesttask.Application.Validations.Teachers;
 using Educationtesttask.Infrastructure.Data;
 using Educationtesttask.Infrastructure.Interfaces;
 using Educationtesttask.Infrastructure.Repositories;
+using FluentAssertions.Common;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -33,6 +34,7 @@ namespace Educationtesttask.Api
 			builder.Services.AddControllers();
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
+			builder.Services.AddHttpContextAccessor();
 			RegisterDbContext(builder.Services, builder.Configuration);
 			RegisterRepositories(builder.Services);
 			RegisterUtilities(builder.Services);

@@ -1,11 +1,12 @@
 ﻿using System.Security.Claims;
+using Educationtesttask.Application.Interfaces;
 using Educationtesttask.Domain.Entities.Account;
 using Educationtesttask.Domain.Enums;
 using Microsoft.AspNetCore.Http;
 
 namespace Educationtesttask.Application.Security
 {
-	public class HttpContextCurrentUserProvider : IHttpContextCurrentUserProvider
+    public class HttpContextCurrentUserProvider : IHttpContextCurrentUserProvider
 	{
 		private readonly IHttpContextAccessor httpContextAccessor;
 
