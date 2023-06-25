@@ -92,6 +92,7 @@ namespace Educationtesttask.Api
 			services.AddTransient<IAuthManager, AuthManager>();
 			services.AddTransient<ISecurityPassword, SecurityPassword>();
 			services.AddTransient<IAuthService, AuthService>();
+			services.AddTransient<IHttpContextCurrentUserProvider, HttpContextCurrentUserProvider>();
 		}
 
 		private static void RegisterAuthentication(IServiceCollection services, IConfiguration configuration)
