@@ -39,6 +39,15 @@ namespace Educationtesttask.Api
 			{
 				options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 			});
+			builder.Services.AddCors(options =>
+			{
+				options.AddPolicy("AllowAll", builder =>
+				{
+					builder.AllowAnyOrigin()
+						   .AllowAnyMethod()
+						   .AllowAnyHeader();
+				});
+			});
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
 			builder.Services.AddHttpContextAccessor();
@@ -59,6 +68,7 @@ namespace Educationtesttask.Api
 			}
 
 			app.UseSerilogRequestLogging();
+			app.UseCors("AllowAll");
 			app.UseHttpsRedirection();
 			app.UseAuthentication();
 			app.UseAuthorization();
