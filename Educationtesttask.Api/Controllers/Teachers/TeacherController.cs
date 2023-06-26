@@ -70,6 +70,26 @@ namespace Educationtesttask.Api.Controllers.Teachers
 		}
 
 		[Authorize(Roles = nameof(Role.Student) + "," + nameof(Role.Teacher))]
+		[HttpGet("filterbyage")]
+		public ActionResult GetAllTeachers([FromQuery] int olderThan)
+		{
+			try
+			{
+				var result = this.teacherService.RetrieveAll(t => DateTime.Now.Year - t.BirthDate.Year > olderThan);
+
+				return Ok(result);
+			}
+			catch (FailedTeacherStorageException exception)
+			{
+				return InternalServerError(exception.InnerException);
+			}
+			catch (FailedTeacherServiceException exception)
+			{
+				return InternalServerError(exception.InnerException);
+			}
+		}
+
+		[Authorize(Roles = nameof(Role.Student) + "," + nameof(Role.Teacher))]
 		[HttpGet("{id}")]
 		public async Task<ActionResult> GetTeacherById(Guid id)
 		{
