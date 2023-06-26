@@ -90,6 +90,26 @@ namespace Educationtesttask.Api.Controllers.Teachers
 		}
 
 		[Authorize(Roles = nameof(Role.Student) + "," + nameof(Role.Teacher))]
+		[HttpGet("filterbyphonenumber/")]
+		public ActionResult GetAllTeachersFilteredByMobileCompany([FromQuery] MobileOperators mobileOperators)
+		{
+			try
+			{
+				var result = this.teacherService.RetrieveAllFilteredByMobileOperators(mobileOperators);
+
+				return Ok(result);
+			}
+			catch (FailedTeacherStorageException exception)
+			{
+				return InternalServerError(exception.InnerException);
+			}
+			catch (FailedTeacherServiceException exception)
+			{
+				return InternalServerError(exception.InnerException);
+			}
+		}
+
+		[Authorize(Roles = nameof(Role.Student) + "," + nameof(Role.Teacher))]
 		[HttpGet("{id}")]
 		public async Task<ActionResult> GetTeacherById(Guid id)
 		{
