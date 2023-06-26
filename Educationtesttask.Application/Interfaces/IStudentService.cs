@@ -15,5 +15,6 @@ namespace Educationtesttask.Application.Interfaces
 	{
 		IQueryable<Student> RetrieveAllFileteredByBirthDate(int startMonth, int startDay, int endMonth, int endDay);
 		IQueryable<Student> RetrieveAllFilteredByMobileOperators(MobileOperators mobileOperators);
+		IQueryable<Student> RetrieveAllThatContainEnteredPhrase(string phrase);
 	}
 }

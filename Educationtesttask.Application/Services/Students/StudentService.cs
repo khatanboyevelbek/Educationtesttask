@@ -248,6 +248,26 @@ namespace Educationtesttask.Application.Services
 			}
 		}
 
+		public IQueryable<Student> RetrieveAllThatContainEnteredPhrase(string phrase)
+		{
+			try
+			{
+				return this.studentRepository.SelectAllAsync(s => s.FirstName.Contains(phrase) || s.LastName.Contains(phrase));
+			}
+			catch (SqlException sqlException)
+			{
+				this.logger.LogCritical(sqlException);
+
+				throw new FailedStudentStorageException(sqlException);
+			}
+			catch (Exception exception)
+			{
+				this.logger.LogCritical(exception);
+
+				throw new FailedStudentServiceException(exception);
+			}
+		}
+
 		public IQueryable<Student> RetrieveAllFileteredByBirthDate(int startMonth, int startDay, int endMonth, int endDay)
 		{
 			try

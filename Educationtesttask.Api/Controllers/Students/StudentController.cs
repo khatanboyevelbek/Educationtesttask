@@ -128,6 +128,26 @@ namespace Educationtesttask.Api.Controllers.Students
 		}
 
 		[Authorize(Roles = nameof(Role.Student) + "," + nameof(Role.Teacher))]
+		[HttpGet("filterbyphrase/")]
+		public ActionResult GetAllStudentsThatContainEnteredPhrase([FromQuery] string phrase)
+		{
+			try
+			{
+				var result = this.studentService.RetrieveAllThatContainEnteredPhrase(phrase);
+
+				return Ok(result);
+			}
+			catch (FailedStudentStorageException exception)
+			{
+				return InternalServerError(exception.InnerException);
+			}
+			catch (FailedStudentServiceException exception)
+			{
+				return InternalServerError(exception.InnerException);
+			}
+		}
+
+		[Authorize(Roles = nameof(Role.Student) + "," + nameof(Role.Teacher))]
 		[HttpGet("{id}")]
 		public async Task<ActionResult> GetStudent (Guid id)
 		{
