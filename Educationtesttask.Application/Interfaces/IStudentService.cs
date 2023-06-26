@@ -10,5 +10,7 @@ namespace Educationtesttask.Application.Interfaces
 {
     public interface IStudentService 
 		: IGenericService<Student, StudentCreateViewModel, StudentUpdateViewModel>
-	{ }
+	{
+		IQueryable<Student> RetrieveAllFileteredByBirthDate(int startMonth, int startDay, int endMonth, int endDay);
+	}
 }

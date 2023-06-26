@@ -248,6 +248,30 @@ namespace Educationtesttask.Application.Services
 			}
 		}
 
+		public IQueryable<Student> RetrieveAllFileteredByBirthDate(int startMonth, int startDay, int endMonth, int endDay)
+		{
+			try
+			{
+				Expression<Func<Student, bool>> expression = s =>
+					(s.BirthDate.Month > startMonth || (s.BirthDate.Month == startMonth && s.BirthDate.Day >= startDay)) &&
+					(s.BirthDate.Month < endMonth || (s.BirthDate.Month == endMonth && s.BirthDate.Day <= endDay));
+
+				return this.studentRepository.SelectAllAsync(expression);
+			}
+			catch (SqlException sqlException)
+			{
+				this.logger.LogCritical(sqlException);
+
+				throw new FailedStudentStorageException(sqlException);
+			}
+			catch (Exception exception)
+			{
+				this.logger.LogCritical(exception);
+
+				throw new FailedStudentServiceException(exception);
+			}
+		}
+
 		public async Task<Student> RetrieveByIdAsync(Guid id)
 		{
 			try

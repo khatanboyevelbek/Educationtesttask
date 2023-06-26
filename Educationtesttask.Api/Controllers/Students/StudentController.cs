@@ -67,6 +67,47 @@ namespace Educationtesttask.Api.Controllers.Students
 		}
 
 		[Authorize(Roles = nameof(Role.Student) + "," + nameof(Role.Teacher))]
+		[HttpGet("filterbyage/")]
+		public ActionResult GetAllStudentsFileteredBySpecificAge([FromQuery] int maxage)
+		{
+			try
+			{
+				var result = this.studentService.RetrieveAll(s => DateTime.Now.Year - s.BirthDate.Year < maxage);
+
+				return Ok(result);
+			}
+			catch (FailedStudentStorageException exception)
+			{
+				return InternalServerError(exception.InnerException);
+			}
+			catch (FailedStudentServiceException exception)
+			{
+				return InternalServerError(exception.InnerException);
+			}
+		}
+
+		[Authorize(Roles = nameof(Role.Student) + "," + nameof(Role.Teacher))]
+		[HttpGet("filterbydate/")]
+		public ActionResult GetAllStudentsFilteredBySpecificDates([FromQuery] int startMonth, [FromQuery] int startDay,
+			[FromQuery] int endMonth, [FromQuery] int endDay)
+		{
+			try
+			{
+				var result = this.studentService.RetrieveAllFileteredByBirthDate(startMonth, startDay, endMonth, endDay);
+
+				return Ok(result);
+			}
+			catch (FailedStudentStorageException exception)
+			{
+				return InternalServerError(exception.InnerException);
+			}
+			catch (FailedStudentServiceException exception)
+			{
+				return InternalServerError(exception.InnerException);
+			}
+		}
+
+		[Authorize(Roles = nameof(Role.Student) + "," + nameof(Role.Teacher))]
 		[HttpGet("{id}")]
 		public async Task<ActionResult> GetStudent (Guid id)
 		{
