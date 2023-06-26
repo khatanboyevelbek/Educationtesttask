@@ -272,6 +272,45 @@ namespace Educationtesttask.Application.Services
 			}
 		}
 
+		public IQueryable<Student> RetrieveAllFilteredByMobileOperators(MobileOperators mobileOperators)
+		{
+			try
+			{
+
+				return mobileOperators switch
+				{
+					MobileOperators.Beeline => 
+						this.studentRepository.SelectAllAsync(s => s.PhoneNumber.StartsWith("+99890") || s.PhoneNumber.StartsWith("+99891")),
+
+					MobileOperators.Ucell =>
+						this.studentRepository.SelectAllAsync(s => s.PhoneNumber.StartsWith("+99893") || s.PhoneNumber.StartsWith("+99894")),
+
+					MobileOperators.Uzmobile =>
+						this.studentRepository.SelectAllAsync(s => s.PhoneNumber.StartsWith("+99895") || s.PhoneNumber.StartsWith("+99899")),
+
+					MobileOperators.Umc =>
+						this.studentRepository.SelectAllAsync(s => s.PhoneNumber.StartsWith("+99897")),
+
+					MobileOperators.Humans =>
+						this.studentRepository.SelectAllAsync(s => s.PhoneNumber.StartsWith("+99833")),
+
+					_ => this.studentRepository.SelectAllAsync()
+				};
+			}
+			catch (SqlException sqlException)
+			{
+				this.logger.LogCritical(sqlException);
+
+				throw new FailedStudentStorageException(sqlException);
+			}
+			catch (Exception exception)
+			{
+				this.logger.LogCritical(exception);
+
+				throw new FailedStudentServiceException(exception);
+			}
+		}
+
 		public async Task<Student> RetrieveByIdAsync(Guid id)
 		{
 			try

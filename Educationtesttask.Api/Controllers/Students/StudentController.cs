@@ -68,11 +68,11 @@ namespace Educationtesttask.Api.Controllers.Students
 
 		[Authorize(Roles = nameof(Role.Student) + "," + nameof(Role.Teacher))]
 		[HttpGet("filterbyage/")]
-		public ActionResult GetAllStudentsFileteredBySpecificAge([FromQuery] int maxage)
+		public ActionResult GetAllStudentsFileteredBySpecificAge([FromQuery] int youngerThan)
 		{
 			try
 			{
-				var result = this.studentService.RetrieveAll(s => DateTime.Now.Year - s.BirthDate.Year < maxage);
+				var result = this.studentService.RetrieveAll(s => DateTime.Now.Year - s.BirthDate.Year < youngerThan);
 
 				return Ok(result);
 			}
@@ -87,13 +87,33 @@ namespace Educationtesttask.Api.Controllers.Students
 		}
 
 		[Authorize(Roles = nameof(Role.Student) + "," + nameof(Role.Teacher))]
-		[HttpGet("filterbydate/")]
+		[HttpGet("filterbybirthdate/")]
 		public ActionResult GetAllStudentsFilteredBySpecificDates([FromQuery] int startMonth, [FromQuery] int startDay,
 			[FromQuery] int endMonth, [FromQuery] int endDay)
 		{
 			try
 			{
 				var result = this.studentService.RetrieveAllFileteredByBirthDate(startMonth, startDay, endMonth, endDay);
+
+				return Ok(result);
+			}
+			catch (FailedStudentStorageException exception)
+			{
+				return InternalServerError(exception.InnerException);
+			}
+			catch (FailedStudentServiceException exception)
+			{
+				return InternalServerError(exception.InnerException);
+			}
+		}
+
+		[Authorize(Roles = nameof(Role.Student) + "," + nameof(Role.Teacher))]
+		[HttpGet("filterbyphonenumber/")]
+		public ActionResult GetAllStudents([FromQuery] MobileOperators mobileOperators)
+		{
+			try
+			{
+				var result = this.studentService.RetrieveAllFilteredByMobileOperators(mobileOperators);
 
 				return Ok(result);
 			}
