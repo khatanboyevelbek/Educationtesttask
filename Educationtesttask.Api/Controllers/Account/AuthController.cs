@@ -1,6 +1,7 @@
 ﻿using Educationtesttask.Application.Interfaces;
 using Educationtesttask.Domain.Entities.Account;
 using Educationtesttask.Domain.Exceptions.Account;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
 
@@ -17,6 +18,7 @@ namespace Educationtesttask.Api.Controllers.Account
 			this.authService = authService;
 		}
 
+		[AllowAnonymous]
 		[HttpPost]
 		[Route("student/login")]
 		public async Task<ActionResult> PostLoginStudent(LoginModel loginModel)
@@ -46,6 +48,7 @@ namespace Educationtesttask.Api.Controllers.Account
 			}
 		}
 
+		[AllowAnonymous]
 		[HttpPost]
 		[Route("teacher/login")]
 		public async Task<ActionResult> PostLoginTeacher(LoginModel loginModel)

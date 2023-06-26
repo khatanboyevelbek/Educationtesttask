@@ -4,6 +4,7 @@ using Educationtesttask.Application.Logging;
 using Educationtesttask.Application.Validations.Students;
 using Educationtesttask.Application.ViewModels.Students;
 using Educationtesttask.Domain.Entities;
+using Educationtesttask.Domain.Entities.Account;
 using Educationtesttask.Domain.Enums;
 using Educationtesttask.Domain.Exceptions.Students;
 using Educationtesttask.Infrastructure.Interfaces;
@@ -19,17 +20,20 @@ namespace Educationtesttask.Application.Services
 		private readonly StudentCreateViewModelValidation validatorCreate;
 		private readonly StudentUpdateViewModelValidation validatorUpdate;
 		private readonly ISecurityPassword securityPassword;
+		private readonly IHttpContextCurrentUserProvider httpContextCurrentUserProvider;
 
 		public StudentService(IStudentRepository studentRepository, ISerilogLogger logger,
 			StudentCreateViewModelValidation validatorCreate,
 			StudentUpdateViewModelValidation validatorUpdate, 
-			ISecurityPassword securityPassword)
+			ISecurityPassword securityPassword,
+			IHttpContextCurrentUserProvider httpContextCurrentUserProvider)
 		{
 			this.studentRepository = studentRepository;
 			this.logger = logger;
 			this.validatorCreate = validatorCreate;
 			this.validatorUpdate = validatorUpdate;
 			this.securityPassword = securityPassword;
+			this.httpContextCurrentUserProvider = httpContextCurrentUserProvider;
 		}
 
 		public async Task<Student> AddAsync(StudentCreateViewModel viewModel)
@@ -107,6 +111,13 @@ namespace Educationtesttask.Application.Services
 		{
 			try
 			{
+				UserClaims currentUser = this.httpContextCurrentUserProvider.GetCurrentUser();
+
+				if (currentUser.Role != Role.Student)
+				{
+					throw new RestrictAccessStudentException();
+				}
+
 				Student existingEntity = await this.studentRepository.SelectByIdAsync(id);
 
 				if (existingEntity is null)
@@ -117,6 +128,12 @@ namespace Educationtesttask.Application.Services
 				return await this.studentRepository.DeleteAsync(existingEntity);
 			}
 			catch (StudentNotFoundException studentNotFoundException)
+			{
+				this.logger.LogError(studentNotFoundException);
+
+				throw new StudentDependencyException(studentNotFoundException);
+			}
+			catch (RestrictAccessStudentException studentNotFoundException)
 			{
 				this.logger.LogError(studentNotFoundException);
 
@@ -140,6 +157,13 @@ namespace Educationtesttask.Application.Services
 		{
 			try
 			{
+				UserClaims currentUser = this.httpContextCurrentUserProvider.GetCurrentUser();
+
+				if (currentUser.Role != Role.Student)
+				{
+					throw new RestrictAccessStudentException();
+				}
+
 				if (viewModel is null)
 				{
 					throw new NullStudentException();
@@ -179,6 +203,12 @@ namespace Educationtesttask.Application.Services
 				throw new StudentValidationException(nullStudentException);
 			}
 			catch (StudentNotFoundException studentNotFoundException)
+			{
+				this.logger.LogError(studentNotFoundException);
+
+				throw new StudentDependencyException(studentNotFoundException);
+			}
+			catch (RestrictAccessStudentException studentNotFoundException)
 			{
 				this.logger.LogError(studentNotFoundException);
 

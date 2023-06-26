@@ -5,6 +5,7 @@ using Educationtesttask.Application.Validations.Subjects;
 using Educationtesttask.Application.ViewModels.Subjects;
 using Educationtesttask.Domain.Entities;
 using Educationtesttask.Domain.Entities.Account;
+using Educationtesttask.Domain.Enums;
 using Educationtesttask.Domain.Exceptions.Students;
 using Educationtesttask.Domain.Exceptions.Subjects;
 using Educationtesttask.Infrastructure.Interfaces;
@@ -38,6 +39,13 @@ namespace Educationtesttask.Application.Services.Subjects
 		{
 			try
 			{
+				UserClaims currentUser = this.httpContextCurrentUserProvider.GetCurrentUser();
+
+				if (currentUser.Role != Role.Teacher)
+				{
+					throw new RestrictedAccessSubjectException();
+				}
+
 				if (viewModel is null)
 				{
 					throw new NullSubjectException();
@@ -53,8 +61,6 @@ namespace Educationtesttask.Application.Services.Subjects
 				{
 					throw new AlreadyExistSubjectException();
 				}
-
-				UserClaims currentUser = this.httpContextCurrentUserProvider.GetCurrentUser();
 
 				var subject = new Subject()
 				{
@@ -87,6 +93,12 @@ namespace Educationtesttask.Application.Services.Subjects
 
 				throw new SubjectDependencyException(alreadyExistSubjectException);
 			}
+			catch (RestrictedAccessSubjectException restrictedAccessSubjectException)
+			{
+				this.logger.LogError(restrictedAccessSubjectException);
+
+				throw new SubjectDependencyException(restrictedAccessSubjectException);
+			}
 			catch (SqlException sqlException)
 			{
 				this.logger.LogCritical(sqlException);
@@ -105,6 +117,13 @@ namespace Educationtesttask.Application.Services.Subjects
 		{
 			try
 			{
+				UserClaims currentUser = this.httpContextCurrentUserProvider.GetCurrentUser();
+
+				if (currentUser.Role != Role.Teacher)
+				{
+					throw new RestrictedAccessSubjectException();
+				}
+
 				var existingEntity = await this.subjectRepository.SelectByIdAsync(id);
 
 				if (existingEntity is null)
@@ -119,6 +138,12 @@ namespace Educationtesttask.Application.Services.Subjects
 				this.logger.LogError(subjectNotFoundException);
 
 				throw new SubjectDependencyException(subjectNotFoundException);
+			}
+			catch (RestrictedAccessSubjectException restrictedAccessSubjectException)
+			{
+				this.logger.LogError(restrictedAccessSubjectException);
+
+				throw new SubjectDependencyException(restrictedAccessSubjectException);
 			}
 			catch (SqlException sqlException)
 			{
@@ -138,6 +163,13 @@ namespace Educationtesttask.Application.Services.Subjects
 		{
 			try
 			{
+				UserClaims currentUser = this.httpContextCurrentUserProvider.GetCurrentUser();
+
+				if (currentUser.Role != Role.Teacher)
+				{
+					throw new RestrictedAccessSubjectException();
+				}
+
 				if (viewModel is null)
 				{
 					throw new NullSubjectException();
@@ -175,6 +207,12 @@ namespace Educationtesttask.Application.Services.Subjects
 				this.logger.LogError(subjectNotFoundException);
 
 				throw new SubjectDependencyException(subjectNotFoundException);
+			}
+			catch (RestrictedAccessSubjectException restrictedAccessSubjectException)
+			{
+				this.logger.LogError(restrictedAccessSubjectException);
+
+				throw new SubjectDependencyException(restrictedAccessSubjectException);
 			}
 			catch (SqlException sqlException)
 			{

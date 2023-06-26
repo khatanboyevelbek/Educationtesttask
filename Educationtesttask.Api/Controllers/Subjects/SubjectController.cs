@@ -35,6 +35,11 @@ namespace Educationtesttask.Api.Controllers.Subjects
 			{
 				return Conflict(exception.InnerException);
 			}
+			catch (SubjectDependencyException exception)
+				 when (exception.InnerException is RestrictedAccessSubjectException)
+			{
+				return Forbidden(exception.InnerException);
+			}
 			catch (FailedSubjectStorageException exception)
 			{
 				return InternalServerError(exception.InnerException);
@@ -109,6 +114,11 @@ namespace Educationtesttask.Api.Controllers.Subjects
 			{
 				return NotFound(exception.InnerException);
 			}
+			catch (SubjectDependencyException exception)
+				 when (exception.InnerException is RestrictedAccessSubjectException)
+			{
+				return Forbidden(exception.InnerException);
+			}
 			catch (FailedSubjectStorageException exception)
 			{
 				return InternalServerError(exception.InnerException);
@@ -133,6 +143,11 @@ namespace Educationtesttask.Api.Controllers.Subjects
 				when (exception.InnerException is SubjectNotFoundException)
 			{
 				return NotFound(exception.InnerException);
+			}
+			catch (SubjectDependencyException exception)
+				 when (exception.InnerException is RestrictedAccessSubjectException)
+			{
+				return Forbidden(exception.InnerException);
 			}
 			catch (FailedSubjectStorageException exception)
 			{

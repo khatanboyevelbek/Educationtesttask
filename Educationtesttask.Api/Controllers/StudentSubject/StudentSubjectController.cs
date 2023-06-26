@@ -1,6 +1,8 @@
 ﻿using Educationtesttask.Application.Interfaces;
 using Educationtesttask.Application.ViewModels.StudentSubjects;
+using Educationtesttask.Domain.Enums;
 using Educationtesttask.Domain.Exceptions.StudentSubjects;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
 
@@ -15,6 +17,7 @@ namespace Educationtesttask.Api.Controllers.StudentSubject
 		public StudentSubjectController(IStudentSubjectService studentSubjectService) =>
 			this.studentSubjectService = studentSubjectService;
 
+		[Authorize(Roles = nameof(Role.Student))]
 		[HttpPost]
 		public async Task<ActionResult> PostStudentSubject(StudentSubjectViewModel studentSubjectViewModel)
 		{
@@ -28,6 +31,11 @@ namespace Educationtesttask.Api.Controllers.StudentSubject
 			{
 				return BadRequest(studentSubjectValidationException);
 			}
+			catch (StudentSubjectDependencyException studentSubjectDependencyException)
+			  when (studentSubjectDependencyException.InnerException is RestrictedAccessStudentSubjectException)
+			{
+				return Forbidden(studentSubjectDependencyException.InnerException);
+			}
 			catch (FailedStudentSubjectStorageException  failedStudentSubjectStorageException)
 			{
 				return InternalServerError(failedStudentSubjectStorageException);
@@ -38,6 +46,7 @@ namespace Educationtesttask.Api.Controllers.StudentSubject
 			}
 		}
 
+		[Authorize(Roles = nameof(Role.Student) + "," + nameof(Role.Teacher))]
 		[HttpGet]
 		public ActionResult GetAllStudentSubjects()
 		{
@@ -57,6 +66,7 @@ namespace Educationtesttask.Api.Controllers.StudentSubject
 			}
 		}
 
+		[Authorize(Roles = nameof(Role.Student) + "," + nameof(Role.Teacher))]
 		[HttpGet("{studentId}/{subjectId}")]
 		public async Task<ActionResult> GetStudentSubject(Guid studentId, Guid subjectId)
 		{
@@ -81,6 +91,7 @@ namespace Educationtesttask.Api.Controllers.StudentSubject
 			}
 		}
 
+		[Authorize(Roles = nameof(Role.Student))]
 		[HttpPut]
 		public async Task<ActionResult> PutStudentSubject(StudentSubjectViewModel viewModel)
 		{
@@ -99,6 +110,11 @@ namespace Educationtesttask.Api.Controllers.StudentSubject
 			{
 				return NotFound(exception.InnerException);
 			}
+			catch (StudentSubjectDependencyException studentSubjectDependencyException)
+			  when (studentSubjectDependencyException.InnerException is RestrictedAccessStudentSubjectException)
+			{
+				return Forbidden(studentSubjectDependencyException.InnerException);
+			}
 			catch (FailedStudentSubjectStorageException failedStudentSubjectStorageException)
 			{
 				return InternalServerError(failedStudentSubjectStorageException);
@@ -109,6 +125,7 @@ namespace Educationtesttask.Api.Controllers.StudentSubject
 			}
 		}
 
+		[Authorize(Roles = nameof(Role.Student))]
 		[HttpDelete("{studentId}/{subjectId}")]
 		public async Task<ActionResult> DeleteStudentSubject(Guid studentId, Guid subjectId)
 		{
@@ -122,6 +139,11 @@ namespace Educationtesttask.Api.Controllers.StudentSubject
 				when (exception.InnerException is StudentSubjectNotFoundException)
 			{
 				return NotFound(exception.InnerException);
+			}
+			catch (StudentSubjectDependencyException studentSubjectDependencyException)
+			  when (studentSubjectDependencyException.InnerException is RestrictedAccessStudentSubjectException)
+			{
+				return Forbidden(studentSubjectDependencyException.InnerException);
 			}
 			catch (FailedStudentSubjectStorageException failedStudentSubjectStorageException)
 			{

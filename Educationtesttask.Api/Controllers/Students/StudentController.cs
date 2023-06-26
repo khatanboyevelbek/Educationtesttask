@@ -1,6 +1,8 @@
 ﻿using Educationtesttask.Application.Interfaces;
 using Educationtesttask.Application.ViewModels.Students;
+using Educationtesttask.Domain.Enums;
 using Educationtesttask.Domain.Exceptions.Students;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
 
@@ -15,6 +17,7 @@ namespace Educationtesttask.Api.Controllers.Students
 		public StudentController(IStudentService studentService) =>
 			this.studentService = studentService;
 
+		[AllowAnonymous]
 		[HttpPost]
 		public async Task<ActionResult> PostStudent(StudentCreateViewModel viewModel)
 		{
@@ -43,6 +46,7 @@ namespace Educationtesttask.Api.Controllers.Students
 			}
 		}
 
+		[Authorize(Roles = nameof(Role.Student) + "," + nameof(Role.Teacher))]
 		[HttpGet]
 		public ActionResult GetAllStudents()
 		{
@@ -62,6 +66,7 @@ namespace Educationtesttask.Api.Controllers.Students
 			}
 		}
 
+		[Authorize(Roles = nameof(Role.Student) + "," + nameof(Role.Teacher))]
 		[HttpGet("{id}")]
 		public async Task<ActionResult> GetStudent (Guid id)
 		{
@@ -86,6 +91,7 @@ namespace Educationtesttask.Api.Controllers.Students
 			}
 		}
 
+		[Authorize(Roles = nameof(Role.Student))]
 		[HttpPut]
 		public async Task<ActionResult> PutStudent(StudentUpdateViewModel viewModel)
 		{
@@ -104,6 +110,11 @@ namespace Educationtesttask.Api.Controllers.Students
 			{
 				return NotFound(exception.InnerException);
 			}
+			catch (StudentDependencyException exception)
+				when (exception.InnerException is RestrictAccessStudentException)
+			{
+				return Forbidden(exception.InnerException);
+			}
 			catch (FailedStudentStorageException exception)
 			{
 				return InternalServerError(exception.InnerException);
@@ -114,6 +125,7 @@ namespace Educationtesttask.Api.Controllers.Students
 			}
 		}
 
+		[Authorize(Roles = nameof(Role.Student))]
 		[HttpDelete("{id}")]
 		public async Task<ActionResult> DeleteStudent(Guid id)
 		{
@@ -127,6 +139,11 @@ namespace Educationtesttask.Api.Controllers.Students
 				when (exception.InnerException is StudentNotFoundException)
 			{
 				return NotFound(exception.InnerException);
+			}
+			catch (StudentDependencyException exception)
+				when (exception.InnerException is RestrictAccessStudentException)
+			{
+				return Forbidden(exception.InnerException);
 			}
 			catch (FailedStudentStorageException exception)
 			{

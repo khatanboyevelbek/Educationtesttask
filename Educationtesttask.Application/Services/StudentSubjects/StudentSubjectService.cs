@@ -4,6 +4,8 @@ using Educationtesttask.Application.Logging;
 using Educationtesttask.Application.Validations.StudentSubjects;
 using Educationtesttask.Application.ViewModels.StudentSubjects;
 using Educationtesttask.Domain.Entities;
+using Educationtesttask.Domain.Entities.Account;
+using Educationtesttask.Domain.Enums;
 using Educationtesttask.Domain.Exceptions.StudentSubjects;
 using Educationtesttask.Infrastructure.Interfaces;
 using FluentValidation.Results;
@@ -16,12 +18,15 @@ namespace Educationtesttask.Application.Services.StudentSubjects
 		private readonly IStudentSubjectRepository studentSubjectRepository;
 		private readonly ISerilogLogger logger;
 		private readonly StudentSubjectViewModelValidation validator;
+		private readonly IHttpContextCurrentUserProvider httpContextCurrentUserProvider;
 
 		public StudentSubjectService(IStudentSubjectRepository studentSubjectRepository, 
-			ISerilogLogger logger, StudentSubjectViewModelValidation validator)
+			ISerilogLogger logger, StudentSubjectViewModelValidation validator,
+			IHttpContextCurrentUserProvider httpContextCurrentUserProvider)
 		{
 			this.studentSubjectRepository = studentSubjectRepository;
 			this.logger = logger;
+			this.validator = validator;
 			this.validator = validator;
 		}
 
@@ -29,6 +34,13 @@ namespace Educationtesttask.Application.Services.StudentSubjects
 		{
 			try
 			{
+				UserClaims currentUser = this.httpContextCurrentUserProvider.GetCurrentUser();
+
+				if (currentUser.Role != Role.Student)
+				{
+					throw new RestrictedAccessStudentSubjectException();
+				}
+
 				if (viewModel is null)
 				{
 					throw new NullStudentSubjectException();
@@ -39,6 +51,7 @@ namespace Educationtesttask.Application.Services.StudentSubjects
 
 				var studentSubject = new StudentSubject()
 				{
+					StudentId = currentUser.UserId,
 					SubjectId = viewModel.SubjectId,
 					Grade = viewModel.Grade
 				};
@@ -56,6 +69,12 @@ namespace Educationtesttask.Application.Services.StudentSubjects
 				this.logger.LogError(invalidStudentSubjectException);
 
 				throw new StudentSubjectValidationException(invalidStudentSubjectException);
+			}
+			catch (RestrictedAccessStudentSubjectException restrictedAccessStudentSubjectException)
+			{
+				this.logger.LogError(restrictedAccessStudentSubjectException);
+
+				throw new StudentSubjectDependencyException(restrictedAccessStudentSubjectException);
 			}
 			catch (SqlException sqlException)
 			{
@@ -75,6 +94,13 @@ namespace Educationtesttask.Application.Services.StudentSubjects
 		{
 			try
 			{
+				UserClaims currentUser = this.httpContextCurrentUserProvider.GetCurrentUser();
+
+				if (currentUser.Role != Role.Student)
+				{
+					throw new RestrictedAccessStudentSubjectException();
+				}
+
 				StudentSubject existingEntity = await this.studentSubjectRepository.SelectByIdAsync(subjectId, studentId);
 
 				if (existingEntity is null)
@@ -89,6 +115,12 @@ namespace Educationtesttask.Application.Services.StudentSubjects
 				this.logger.LogError(studentSubjectNotFoundException);
 
 				throw new StudentSubjectDependencyException(studentSubjectNotFoundException);
+			}
+			catch (RestrictedAccessStudentSubjectException restrictedAccessStudentSubjectException)
+			{
+				this.logger.LogError(restrictedAccessStudentSubjectException);
+
+				throw new StudentSubjectDependencyException(restrictedAccessStudentSubjectException);
 			}
 			catch (SqlException sqlException)
 			{
@@ -108,6 +140,13 @@ namespace Educationtesttask.Application.Services.StudentSubjects
 		{
 			try
 			{
+				UserClaims currentUser = this.httpContextCurrentUserProvider.GetCurrentUser();
+
+				if (currentUser.Role != Role.Student)
+				{
+					throw new RestrictedAccessStudentSubjectException();
+				}
+
 				if (viewModel is null)
 				{
 					throw new NullStudentSubjectException();
@@ -144,6 +183,12 @@ namespace Educationtesttask.Application.Services.StudentSubjects
 				this.logger.LogError(studentSubjectNotFoundException);
 
 				throw new StudentSubjectDependencyException(studentSubjectNotFoundException);
+			}
+			catch (RestrictedAccessStudentSubjectException restrictedAccessStudentSubjectException)
+			{
+				this.logger.LogError(restrictedAccessStudentSubjectException);
+
+				throw new StudentSubjectDependencyException(restrictedAccessStudentSubjectException);
 			}
 			catch (SqlException sqlException)
 			{

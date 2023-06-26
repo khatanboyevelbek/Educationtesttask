@@ -1,11 +1,12 @@
 ﻿using System.Linq.Expressions;
 using Educationtesttask.Application.Interfaces;
 using Educationtesttask.Application.Logging;
-using Educationtesttask.Application.Validations;
 using Educationtesttask.Application.Validations.Teachers;
 using Educationtesttask.Application.ViewModels.Teachers;
 using Educationtesttask.Domain.Entities;
+using Educationtesttask.Domain.Entities.Account;
 using Educationtesttask.Domain.Enums;
+using Educationtesttask.Domain.Exceptions.Subjects;
 using Educationtesttask.Domain.Exceptions.Teachers;
 using Educationtesttask.Infrastructure.Interfaces;
 using FluentValidation.Results;
@@ -13,26 +14,29 @@ using Microsoft.Data.SqlClient;
 
 namespace Educationtesttask.Application.Services
 {
-    public partial class TeacherService : ITeacherService
+	public partial class TeacherService : ITeacherService
 	{
 		private readonly ISerilogLogger logger;
 		private readonly ITeacherRepository teacherRepository;
 		private readonly TeacherCreateViewModelValidation validatorCreate;
 		private readonly TeacherUpdateViewModelValidation validatorUpdate;
 		private readonly ISecurityPassword securityPassword;
+		private readonly IHttpContextCurrentUserProvider httpContextCurrentUserProvider;
 
 
 		public TeacherService (ISerilogLogger logger,
 			ITeacherRepository teacherRepository,
 			TeacherCreateViewModelValidation validatorCreate,
 			TeacherUpdateViewModelValidation validatorUpdate,
-			ISecurityPassword securityPassword)
+			ISecurityPassword securityPassword,
+			IHttpContextCurrentUserProvider httpContextCurrentUserProvider)
 		{
 			this.logger = logger;
 			this.teacherRepository = teacherRepository;
 			this.validatorCreate = validatorCreate;
 			this.validatorUpdate = validatorUpdate;
 			this.securityPassword = securityPassword;
+			this.httpContextCurrentUserProvider = httpContextCurrentUserProvider;
 		}
 
 		public async Task<Teacher> AddAsync(TeacherCreateViewModel viewModel)
@@ -106,6 +110,13 @@ namespace Educationtesttask.Application.Services
 		{
 			try
 			{
+				UserClaims currentUser = this.httpContextCurrentUserProvider.GetCurrentUser();
+
+				if (currentUser.Role != Role.Teacher)
+				{
+					throw new RestrictAccessTeacherException();
+				}
+
 				Teacher existingEntity = await this.teacherRepository.SelectByIdAsync(id);
 
 				if(existingEntity is null)
@@ -120,6 +131,12 @@ namespace Educationtesttask.Application.Services
 				this.logger.LogError(teacherNotFoundException);
 
 				throw new TeacherDependencyException(teacherNotFoundException);
+			}
+			catch (RestrictAccessTeacherException restrictAccessTeacherException)
+			{
+				this.logger.LogError(restrictAccessTeacherException);
+
+				throw new TeacherDependencyException(restrictAccessTeacherException);
 			}
 			catch (SqlException sqlException)
 			{
@@ -139,6 +156,13 @@ namespace Educationtesttask.Application.Services
 		{
 			try
 			{
+				UserClaims currentUser = this.httpContextCurrentUserProvider.GetCurrentUser();
+
+				if (currentUser.Role != Role.Teacher)
+				{
+					throw new RestrictAccessTeacherException();
+				}
+
 				ValidationResult validationResult = validatorUpdate.Validate(viewModel);
 				Validate(validationResult);
 
@@ -178,6 +202,12 @@ namespace Educationtesttask.Application.Services
 				this.logger.LogError(teacherNotFoundException);
 
 				throw new TeacherDependencyException(teacherNotFoundException);
+			}
+			catch (RestrictAccessTeacherException restrictAccessTeacherException)
+			{
+				this.logger.LogError(restrictAccessTeacherException);
+
+				throw new TeacherDependencyException(restrictAccessTeacherException);
 			}
 			catch (SqlException sqlException)
 			{

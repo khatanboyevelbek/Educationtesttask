@@ -1,7 +1,9 @@
 ﻿using Educationtesttask.Application.Interfaces;
 using Educationtesttask.Application.ViewModels.Teachers;
 using Educationtesttask.Domain.Entities;
+using Educationtesttask.Domain.Enums;
 using Educationtesttask.Domain.Exceptions.Teachers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
 
@@ -18,6 +20,7 @@ namespace Educationtesttask.Api.Controllers.Teachers
 			this.teacherService = teacherService;
 		}
 
+		[AllowAnonymous]
 		[HttpPost]
 		public async Task<ActionResult> PostTeacher(TeacherCreateViewModel teacherCreateViewModel)
 		{
@@ -46,6 +49,7 @@ namespace Educationtesttask.Api.Controllers.Teachers
 			}
 		}
 
+		[Authorize(Roles = nameof(Role.Student) + "," + nameof(Role.Teacher))]
 		[HttpGet]
 		public ActionResult GetAllTeachers()
 		{
@@ -65,6 +69,7 @@ namespace Educationtesttask.Api.Controllers.Teachers
 			}
 		}
 
+		[Authorize(Roles = nameof(Role.Student) + "," + nameof(Role.Teacher))]
 		[HttpGet("{id}")]
 		public async Task<ActionResult> GetTeacherById(Guid id)
 		{
@@ -89,6 +94,7 @@ namespace Educationtesttask.Api.Controllers.Teachers
 			}
 		}
 
+		[Authorize(Roles = nameof(Role.Teacher))]
 		[HttpPut]
 		public async Task<ActionResult> PutTeacher(TeacherUpdateViewModel viewModel)
 		{
@@ -107,6 +113,11 @@ namespace Educationtesttask.Api.Controllers.Teachers
 			{
 				return NotFound(exception.InnerException);
 			}
+			catch (TeacherDependencyException exception)
+				when (exception.InnerException is RestrictAccessTeacherException)
+			{
+				return Forbidden(exception.InnerException);
+			}
 			catch (FailedTeacherStorageException exception)
 			{
 				return InternalServerError(exception.InnerException);
@@ -117,6 +128,7 @@ namespace Educationtesttask.Api.Controllers.Teachers
 			}
 		}
 
+		[Authorize(Roles = nameof(Role.Teacher))]
 		[HttpDelete("{id}")]
 		public async Task<ActionResult> DeleteTeacher(Guid id)
 		{
@@ -130,6 +142,11 @@ namespace Educationtesttask.Api.Controllers.Teachers
 				when (exception.InnerException is TeacherNotFoundException)
 			{
 				return NotFound(exception.InnerException);
+			}
+			catch (TeacherDependencyException exception)
+				when (exception.InnerException is RestrictAccessTeacherException)
+			{
+				return Forbidden(exception.InnerException);
 			}
 			catch (FailedTeacherStorageException exception)
 			{
