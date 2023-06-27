@@ -9,19 +9,19 @@ namespace Educationtesttask.Infrastructure.Repositories
 {
 	public class StudentSubjectRepository : IStudentSubjectRepository
 	{
-		private readonly AppDbContext dbContext;
+		private readonly AppDbContext appDbContext;
 		private readonly DbSet<StudentSubject> dbSet;
 
-		public StudentSubjectRepository (AppDbContext dbContext)
+		public StudentSubjectRepository (AppDbContext appDbContext)
 		{
-			this.dbContext = dbContext;
-			this.dbSet = dbContext.Set<StudentSubject>();
+			this.appDbContext = appDbContext;
+			this.dbSet = appDbContext.Set<StudentSubject>();
 		}
 
 		public async Task<StudentSubject> AddAsync(StudentSubject entity)
 		{
 			EntityEntry<StudentSubject> addedEntity = await dbSet.AddAsync(entity);
-			await dbContext.SaveChangesAsync();
+			await appDbContext.SaveChangesAsync();
 
 			return addedEntity.Entity;
 		}
@@ -31,13 +31,13 @@ namespace Educationtesttask.Infrastructure.Repositories
 
 		public IQueryable<StudentSubject> SelectAllAsync(Expression<Func<StudentSubject, bool>> filter = null)
 		{
-			return filter is null ? this.dbSet : this.dbSet.Where(filter);
+			return filter is null ? this.dbSet.Include(s => s.Subject) : this.dbSet.Where(filter).Include(s => s.Subject);
 		}
 
 		public async Task<StudentSubject> UpdateAsync(StudentSubject entity)
 		{
 			EntityEntry<StudentSubject> updatedEntity = this.dbSet.Update(entity);
-			await this.dbContext.SaveChangesAsync();
+			await this.appDbContext.SaveChangesAsync();
 
 			return updatedEntity.Entity;
 		}
@@ -45,7 +45,7 @@ namespace Educationtesttask.Infrastructure.Repositories
 		public async Task<bool> DeleteAsync(StudentSubject entity)
 		{
 			EntityEntry<StudentSubject> updatedEntity = this.dbSet.Remove(entity);
-			int result = await this.dbContext.SaveChangesAsync();
+			int result = await this.appDbContext.SaveChangesAsync();
 
 			return result > 0;
 		}

@@ -172,6 +172,31 @@ namespace Educationtesttask.Api.Controllers.Students
 			}
 		}
 
+		[Authorize(Roles = nameof(Role.Student) + "," + nameof(Role.Teacher))]
+		[HttpGet("{id}/studentsubjects/")]
+		public async Task<ActionResult> GetStudentSubjectsOfStudentWithHighGrade(Guid id, [FromQuery] bool highGrade)
+		{
+			try
+			{
+				var result = await this.studentService.RetrieveStudentSubjectsOfStudentWithHighGrade(id, highGrade);
+
+				return Ok(result);
+			}
+			catch (StudentDependencyException exception)
+				 when (exception.InnerException is StudentNotFoundException)
+			{
+				return NotFound(exception.InnerException);
+			}
+			catch (FailedStudentStorageException exception)
+			{
+				return InternalServerError(exception.InnerException);
+			}
+			catch (FailedStudentServiceException exception)
+			{
+				return InternalServerError(exception.InnerException);
+			}
+		}
+
 		[Authorize(Roles = nameof(Role.Student))]
 		[HttpPut]
 		public async Task<ActionResult> PutStudent(StudentUpdateViewModel viewModel)

@@ -363,5 +363,41 @@ namespace Educationtesttask.Application.Services
 				throw new FailedStudentServiceException(exception);
 			}
 		}
+
+		public async Task<Subject> RetrieveStudentSubjectsOfStudentWithHighGrade(Guid id, bool highGrade)
+		{
+			try
+			{
+				var retrieveStudent = await this.studentRepository.SelectByIdAsync(id);
+
+				if (retrieveStudent is null)
+				{
+					throw new StudentNotFoundException();
+				}
+
+				int maxGrade = retrieveStudent.StudentSubjects.Max(s => s.Grade);
+				Subject highGradedSubject = retrieveStudent.StudentSubjects.FirstOrDefault(s => s.Grade == maxGrade)?.Subject;
+
+				return highGradedSubject;
+			}
+			catch (StudentNotFoundException studentNotFoundException)
+			{
+				this.logger.LogError(studentNotFoundException);
+
+				throw new StudentDependencyException(studentNotFoundException);
+			}
+			catch (SqlException sqlException)
+			{
+				this.logger.LogCritical(sqlException);
+
+				throw new FailedStudentStorageException(sqlException);
+			}
+			catch (Exception exception)
+			{
+				this.logger.LogCritical(exception);
+
+				throw new FailedStudentServiceException(exception);
+			}
+		}
 	}
 }

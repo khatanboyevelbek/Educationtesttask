@@ -1,6 +1,4 @@
 using System.Text;
-using System.Text.Json.Serialization;
-using System.Text.Json;
 using Educationtesttask.Application.Interfaces;
 using Educationtesttask.Application.Logging;
 using Educationtesttask.Application.Security;
@@ -16,7 +14,6 @@ using Educationtesttask.Application.Validations.Teachers;
 using Educationtesttask.Infrastructure.Data;
 using Educationtesttask.Infrastructure.Interfaces;
 using Educationtesttask.Infrastructure.Repositories;
-using FluentAssertions.Common;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -26,7 +23,7 @@ using Newtonsoft.Json;
 
 namespace Educationtesttask.Api
 {
-    public class Program
+	public class Program
 	{
 		public static void Main(string[] args)
 		{

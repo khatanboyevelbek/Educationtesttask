@@ -28,6 +28,7 @@ namespace Educationtesttask.Application.Services.StudentSubjects
 			this.logger = logger;
 			this.validator = validator;
 			this.validator = validator;
+			this.httpContextCurrentUserProvider = httpContextCurrentUserProvider;
 		}
 
 		public async Task<StudentSubject> AddAsync(StudentSubjectViewModel viewModel)
