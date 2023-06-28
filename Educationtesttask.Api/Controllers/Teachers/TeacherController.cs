@@ -110,6 +110,26 @@ namespace Educationtesttask.Api.Controllers.Teachers
 		}
 
 		[Authorize(Roles = nameof(Role.Student) + "," + nameof(Role.Teacher))]
+		[HttpGet("{id}/subjects/")]
+		public async Task<ActionResult> GetSubjectOfTeacherThatHasSomeStudnetAndMinValue(Guid id, [FromQuery] int hasNumberOfStudents, [FromQuery] int minimalGrade)
+		{
+			try
+			{
+				Subject subject = await this.teacherService.RetrieveSubjectOfTeacherThatHasSomeStudnetAndMinValue(id, hasNumberOfStudents, minimalGrade);
+
+				return Ok(subject);
+			}
+			catch (FailedTeacherStorageException exception)
+			{
+				return InternalServerError(exception.InnerException);
+			}
+			catch (FailedTeacherServiceException exception)
+			{
+				return InternalServerError(exception.InnerException);
+			}
+		}
+
+		[Authorize(Roles = nameof(Role.Student) + "," + nameof(Role.Teacher))]
 		[HttpGet("{id}")]
 		public async Task<ActionResult> GetTeacherById(Guid id)
 		{

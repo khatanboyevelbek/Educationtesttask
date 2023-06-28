@@ -18,5 +18,6 @@ namespace Educationtesttask.Application.Interfaces
 		public Task<Teacher> ModifyAsync(TeacherUpdateViewModel viewModel);
 		public Task<bool> DeleteAsync(Guid id);
 		IQueryable<Teacher> RetrieveAllFilteredByMobileOperators(MobileOperators mobileOperators);
+		Task<Subject> RetrieveSubjectOfTeacherThatHasSomeStudnetAndMinValue(Guid id, int hasNumberOfStudents, int minimalGrade);
 	}
 }

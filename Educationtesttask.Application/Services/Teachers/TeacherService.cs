@@ -283,6 +283,43 @@ namespace Educationtesttask.Application.Services
 			}
 		}
 
+		public async Task<Subject> RetrieveSubjectOfTeacherThatHasSomeStudnetAndMinValue(Guid id, int hasNumberOfStudents, int minimalGrade)
+		{
+			try
+			{
+				var retrievedTeacher = await this.teacherRepository.SelectByIdAsync(id);
+
+				if (retrievedTeacher is null)
+				{
+					throw new TeacherNotFoundException();
+				}
+
+				Subject subject = retrievedTeacher.Subjects.FirstOrDefault(s =>
+					s.StudentSubjects.Count(ss => ss.Grade >= minimalGrade) >= hasNumberOfStudents);
+
+				return subject;
+
+			}
+			catch (TeacherNotFoundException teacherNotFoundException)
+			{
+				this.logger.LogError(teacherNotFoundException);
+
+				throw new TeacherDependencyException(teacherNotFoundException);
+			}
+			catch (SqlException sqlException)
+			{
+				this.logger.LogCritical(sqlException);
+
+				throw new FailedTeacherStorageException(sqlException);
+			}
+			catch (Exception exception)
+			{
+				this.logger.LogCritical(exception);
+
+				throw new FailedTeacherServiceException(exception);
+			}
+		}
+
 		public async Task<Teacher> RetrieveByIdAsync(Guid id)
 		{
 			try
