@@ -27,8 +27,7 @@ namespace Educationtesttask.Infrastructure.Repositories
 		}
 
 		public async Task<Teacher> SelectByIdAsync(Guid id1) =>
-			await this.dbSet.FindAsync(id1);
-
+			this.dbSet.Include(t => t.Subjects).ThenInclude(ss => ss.StudentSubjects).FirstOrDefault(t => t.Id == id1);
 
 		public async Task<Teacher> UpdateAsync(Teacher entity)
 		{
@@ -48,13 +47,13 @@ namespace Educationtesttask.Infrastructure.Repositories
 
 		public async Task<Teacher> SelectTeacherByEmail(string email)
 		{
-			return this.appDbContext.Set<Teacher>().FirstOrDefault(t => t.Email == email);
+			return this.dbSet.FirstOrDefault(t => t.Email == email);
 		}
 
 		public IQueryable<Teacher> SelectAllAsync(Expression<Func<Teacher, bool>> filter = null)
 		{
-			return filter is null ? this.appDbContext.Set<Teacher>().Include(t => t.Subjects) : 
-				this.appDbContext.Set<Teacher>().Where(filter).Include(t => t.Subjects);
+			return filter is null ? this.dbSet.Include(t => t.Subjects).ThenInclude(ss => ss.StudentSubjects) :
+				this.dbSet.Where(filter).Include(t => t.Subjects).ThenInclude(ss => ss.StudentSubjects);
 		}
 	}
 }
