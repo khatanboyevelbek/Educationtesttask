@@ -280,5 +280,28 @@ namespace Educationtesttask.Application.Services.Subjects
 				throw new FailedSubjectServiceException(exception);
 			}
 		}
+
+		public async Task<Subject> RetrieveSubjectThatHasHighestAvarageGrade()
+		{
+			try
+			{
+				Subject subject = this.subjectRepository.SelectAllAsync().OrderByDescending(s =>
+					s.StudentSubjects.Average(ss => ss.Grade)).FirstOrDefault();
+
+				return subject;
+			}
+			catch (SqlException sqlException)
+			{
+				this.logger.LogCritical(sqlException);
+
+				throw new FailedSubjectStorageException(sqlException);
+			}
+			catch (Exception exception)
+			{
+				this.logger.LogCritical(exception);
+
+				throw new FailedSubjectServiceException(exception);
+			}
+		}
 	}
 }

@@ -71,6 +71,26 @@ namespace Educationtesttask.Api.Controllers.Subjects
 		}
 
 		[Authorize(Roles = nameof(Role.Teacher) + "," + nameof(Role.Student))]
+		[HttpGet("hashighestavaragegrade/")]
+		public async Task<ActionResult> GetSubjectThatHasHighestAvarageGrade()
+		{
+			try
+			{
+				var result = await this.subjectService.RetrieveSubjectThatHasHighestAvarageGrade();
+
+				return Ok(result);
+			}
+			catch (FailedSubjectStorageException exception)
+			{
+				return InternalServerError(exception.InnerException);
+			}
+			catch (FailedSubjectServiceException exception)
+			{
+				return InternalServerError(exception.InnerException);
+			}
+		}
+
+		[Authorize(Roles = nameof(Role.Teacher) + "," + nameof(Role.Student))]
 		[HttpGet("{id}")]
 		public async Task<ActionResult> GetSubject(Guid id)
 		{

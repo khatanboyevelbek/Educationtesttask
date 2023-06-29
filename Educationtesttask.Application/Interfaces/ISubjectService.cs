@@ -11,5 +11,6 @@ namespace Educationtesttask.Application.Interfaces
 	public interface ISubjectService 
 		: IGenericService<Subject, SubjectCreateViewModel, SubjectUpdateViewModel>
 	{
+		Task<Subject> RetrieveSubjectThatHasHighestAvarageGrade();
 	}
 }
