@@ -154,6 +154,26 @@ namespace Educationtesttask.Api.Controllers.Teachers
 			}
 		}
 
+		[Authorize(Roles = nameof(Role.Student) + "," + nameof(Role.Teacher))]
+		[HttpGet("filterbysubject/")]
+		public ActionResult GetAllTeachersThatTeachSubjectsWithHighestGradeThanEnteredValue([FromQuery] int minGrade)
+		{
+			try
+			{
+				var result = this.teacherService.RetrieveAllTeachersThatTeachSubjectsWithHighestGradeThanEnteredValue(minGrade);
+
+				return Ok(result);
+			}
+			catch (FailedTeacherStorageException exception)
+			{
+				return InternalServerError(exception.InnerException);
+			}
+			catch (FailedTeacherServiceException exception)
+			{
+				return InternalServerError(exception.InnerException);
+			}
+		}
+
 		[Authorize(Roles = nameof(Role.Teacher))]
 		[HttpPut]
 		public async Task<ActionResult> PutTeacher(TeacherUpdateViewModel viewModel)

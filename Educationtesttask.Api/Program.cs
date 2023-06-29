@@ -18,8 +18,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Serilog;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace Educationtesttask.Api
 {
@@ -29,25 +29,16 @@ namespace Educationtesttask.Api
 		{
 			var builder = WebApplication.CreateBuilder(args);
 
-			builder.Host.UseSerilog((context, configuration) => 
-				configuration.ReadFrom.Configuration(context.Configuration));
-
 			builder.Services.AddControllers().AddNewtonsoftJson(options =>
 			{
 				options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 			});
-			builder.Services.AddCors(options =>
-			{
-				options.AddPolicy("AllowAll", builder =>
-				{
-					builder.AllowAnyOrigin()
-						   .AllowAnyMethod()
-						   .AllowAnyHeader();
-				});
-			});
+
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
 			builder.Services.AddHttpContextAccessor();
+			ConfigureSerilog(builder.Host);
+			ConfigureCORS(builder.Services);
 			RegisterDbContext(builder.Services, builder.Configuration);
 			RegisterRepositories(builder.Services);
 			RegisterUtilities(builder.Services);
@@ -165,6 +156,25 @@ namespace Educationtesttask.Api
 				c.AddSecurityRequirement(securityRequirement);
 
 			});
+		}
+
+		private static void ConfigureCORS(IServiceCollection services)
+		{
+			services.AddCors(options =>
+			{
+				options.AddPolicy("AllowAll", builder =>
+				{
+					builder.AllowAnyOrigin()
+						   .AllowAnyMethod()
+						   .AllowAnyHeader();
+				});
+			});
+		}
+
+		private static void ConfigureSerilog(ConfigureHostBuilder host)
+		{
+			host.UseSerilog((context, configuration) =>
+				configuration.ReadFrom.Configuration(context.Configuration));
 		}
 	}
 }

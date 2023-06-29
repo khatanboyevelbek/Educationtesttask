@@ -19,5 +19,6 @@ namespace Educationtesttask.Application.Interfaces
 		public Task<bool> DeleteAsync(Guid id);
 		IQueryable<Teacher> RetrieveAllFilteredByMobileOperators(MobileOperators mobileOperators);
 		Task<Subject> RetrieveSubjectOfTeacherThatHasSomeStudnetAndMinValue(Guid id, int hasNumberOfStudents, int minimalGrade);
+		IQueryable<Teacher> RetrieveAllTeachersThatTeachSubjectsWithHighestGradeThanEnteredValue(int minGrade);
 	}
 }

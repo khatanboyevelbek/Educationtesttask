@@ -283,6 +283,29 @@ namespace Educationtesttask.Application.Services
 			}
 		}
 
+		public IQueryable<Teacher> RetrieveAllTeachersThatTeachSubjectsWithHighestGradeThanEnteredValue(int minGrade)
+		{
+			try
+			{
+				IQueryable<Teacher> retrieveTeachers = this.teacherRepository.SelectAllAsync().Where(t => 
+					t.Subjects.Any(s => s.StudentSubjects.Any(ss => ss.Grade >= minGrade)));
+
+				return retrieveTeachers;
+			}
+			catch (SqlException sqlException)
+			{
+				this.logger.LogCritical(sqlException);
+
+				throw new FailedTeacherStorageException(sqlException);
+			}
+			catch (Exception exception)
+			{
+				this.logger.LogCritical(exception);
+
+				throw new FailedTeacherServiceException(exception);
+			}
+		}
+
 		public async Task<Subject> RetrieveSubjectOfTeacherThatHasSomeStudnetAndMinValue(Guid id, int hasNumberOfStudents, int minimalGrade)
 		{
 			try
