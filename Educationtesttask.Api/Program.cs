@@ -12,6 +12,9 @@ using Educationtesttask.Application.Validations.StudentSubjects;
 using Educationtesttask.Application.Validations.Subjects;
 using Educationtesttask.Application.Validations.Teachers;
 using Educationtesttask.Domain.DTOs.Students;
+using Educationtesttask.Domain.DTOs.StudentSubjects;
+using Educationtesttask.Domain.DTOs.Subjects;
+using Educationtesttask.Domain.DTOs.Teachers;
 using Educationtesttask.Domain.Entities.Account;
 using Educationtesttask.Infrastructure.Data;
 using Educationtesttask.Infrastructure.Interfaces;
@@ -87,13 +90,13 @@ namespace Educationtesttask.Api
 		private static void RegisterUtilities(IServiceCollection services)
 		{
 			services.AddScoped<ISerilogLogger, SerilogLogger>();
-			services.AddTransient<TeacherCreateDtoValidation>();
-			services.AddTransient<TeacherUpdateDtoValidation>();
+			services.AddTransient<IValidator<TeacherCreateDto>, TeacherCreateDtoValidation>();
+			services.AddTransient<IValidator<TeacherUpdateDto>, TeacherUpdateDtoValidation>();
 			services.AddTransient<IValidator<StudentCreateDto>, StudentCreateDtoValidation>();
 			services.AddTransient<IValidator<StudentUpdateDto>, StudentUpdateDtoValidation>();
-			services.AddTransient<SubjectCreateDtoValidation>();
-			services.AddTransient<SubjectUpdateDtoValidation>();
-			services.AddTransient<StudentSubjectDtoValidation>();
+			services.AddTransient<IValidator<SubjectCreateDto>, SubjectCreateDtoValidation>();
+			services.AddTransient<IValidator<SubjectUpdateDto>, SubjectUpdateDtoValidation>();
+			services.AddTransient<IValidator<StudentSubjectDto>, StudentSubjectDtoValidation>();
 			services.AddTransient<IValidator<LoginModel>, LoginModelValidation>();
 		}
 		private static void RegisterServices(IServiceCollection services)

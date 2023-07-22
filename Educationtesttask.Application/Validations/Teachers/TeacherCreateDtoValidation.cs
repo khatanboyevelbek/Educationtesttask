@@ -7,24 +7,33 @@ namespace Educationtesttask.Application.Validations.Teachers
     {
         public TeacherCreateDtoValidation()
         {
-            RuleFor(tvm => tvm.FirstName).NotNull().NotEmpty()
-                .WithMessage("Please provide a valid firstname");
+            RuleFor(tvm => tvm.FirstName)
+                .NotNull()
+                .NotEmpty();
 
-            RuleFor(tvm => tvm.LastName).NotNull().NotEmpty()
-                .WithMessage("Please provide a valid lastname");
+            RuleFor(tvm => tvm.LastName)
+                .NotNull()
+                .NotEmpty();
 
-            RuleFor(tvm => tvm.PhoneNumber).NotNull().NotEmpty()
+            RuleFor(tvm => tvm.PhoneNumber)
+                .NotNull()
+                .NotEmpty()
                 .Must(n => n.StartsWith("+998"))
-                .WithMessage("Please provide a valid phone number starting with '+998'");
+                .WithMessage("Phone number should start with '+998'");
 
-            RuleFor(tvm => tvm.Email).NotNull().NotEmpty().EmailAddress()
-                .WithMessage("Please provide a valid email address");
+            RuleFor(tvm => tvm.Email)
+                .NotNull()
+                .NotEmpty()
+                .EmailAddress();
 
-			RuleFor(s => s.Password).NotNull().Must(p => p.Length >= 8)
-				.WithMessage("Password should be minumum 8 characters");
+			RuleFor(s => s.Password)
+                .NotNull()
+                .Must(p => p.Length >= 8)
+				.WithMessage("Password should contain at least 8 characters");
 
-			RuleFor(tvm => tvm.BirthDate).NotNull().NotEmpty()
-                .WithMessage("Please provide a valid birth date");
+            RuleFor(tvm => tvm.BirthDate)
+                .NotEmpty()
+                .LessThan(DateTime.Today);
         }
     }
 }

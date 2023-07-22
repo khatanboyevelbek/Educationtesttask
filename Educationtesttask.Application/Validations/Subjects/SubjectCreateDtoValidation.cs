@@ -7,8 +7,9 @@ namespace Educationtesttask.Application.Validations.Subjects
 	{
 		public SubjectCreateDtoValidation()
 		{
-			RuleFor(s => s.Name).NotNull().NotEmpty()
-			   .WithMessage("Please provide a valid subject name");
+			RuleFor(s => s.Name)
+				.NotNull()
+				.NotEmpty();
 		}
 	}
 }

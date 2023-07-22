@@ -18,8 +18,8 @@ namespace Educationtesttask.Application.Services.Subjects
 	{
 		private readonly ISubjectRepository subjectRepository;
 		private readonly ISerilogLogger logger;
-		private readonly SubjectCreateDtoValidation validatorCreate;
-		private readonly SubjectUpdateDtoValidation validatorUpdate;
+		private readonly IValidator<SubjectCreateDto> validatorCreate;
+		private readonly IValidator<SubjectUpdateDto> validatorUpdate;
 		private readonly IHttpContextCurrentUserProvider httpContextCurrentUserProvider;
 
 		public SubjectService(ISubjectRepository subjectRepository, ISerilogLogger logger, 
@@ -50,7 +50,7 @@ namespace Educationtesttask.Application.Services.Subjects
 					throw new NullSubjectException();
 				}
 
-				ValidationResult validationResult = validatorCreate.Validate(viewModel);
+				ValidationResult validationResult = await this.validatorCreate.ValidateAsync(viewModel);
 				Validate(validationResult);
 
 				bool existingSubject = 
@@ -174,7 +174,7 @@ namespace Educationtesttask.Application.Services.Subjects
 					throw new NullSubjectException();
 				}
 
-				ValidationResult validationResult = validatorUpdate.Validate(viewModel);
+				ValidationResult validationResult = await this.validatorUpdate.ValidateAsync(viewModel);
 				Validate(validationResult);
 
 				Subject existingSubject = await this.subjectRepository.SelectByIdAsync(viewModel.Id);

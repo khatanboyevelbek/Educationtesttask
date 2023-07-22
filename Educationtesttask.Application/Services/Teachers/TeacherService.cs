@@ -6,20 +6,20 @@ using Educationtesttask.Domain.DTOs.Teachers;
 using Educationtesttask.Domain.Entities;
 using Educationtesttask.Domain.Entities.Account;
 using Educationtesttask.Domain.Enums;
-using Educationtesttask.Domain.Exceptions.Subjects;
 using Educationtesttask.Domain.Exceptions.Teachers;
 using Educationtesttask.Infrastructure.Interfaces;
+using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.Data.SqlClient;
 
 namespace Educationtesttask.Application.Services
 {
-	public partial class TeacherService : ITeacherService
+    public partial class TeacherService : ITeacherService
 	{
 		private readonly ISerilogLogger logger;
 		private readonly ITeacherRepository teacherRepository;
-		private readonly TeacherCreateDtoValidation validatorCreate;
-		private readonly TeacherUpdateDtoValidation validatorUpdate;
+		private readonly IValidator<TeacherCreateDto> validatorCreate;
+		private readonly IValidator<TeacherUpdateDto> validatorUpdate;
 		private readonly ISecurityPassword securityPassword;
 		private readonly IHttpContextCurrentUserProvider httpContextCurrentUserProvider;
 
@@ -48,8 +48,9 @@ namespace Educationtesttask.Application.Services
 					throw new NullTeacherException();
 				}
 
-				ValidationResult validationResult = validatorCreate.Validate(viewModel);
+				ValidationResult validationResult = await this.validatorCreate.ValidateAsync(viewModel);
 				Validate(validationResult);
+
 				bool existingTeacher = this.teacherRepository.SelectAllAsync().Any(t => t.Email == viewModel.Email);
 
 				if(existingTeacher)
@@ -163,7 +164,7 @@ namespace Educationtesttask.Application.Services
 					throw new RestrictAccessTeacherException();
 				}
 
-				ValidationResult validationResult = validatorUpdate.Validate(viewModel);
+				ValidationResult validationResult = await this.validatorUpdate.ValidateAsync(viewModel);
 				Validate(validationResult);
 
 				var retrieveExistingTeacher = await this.teacherRepository.SelectByIdAsync(viewModel.Id);

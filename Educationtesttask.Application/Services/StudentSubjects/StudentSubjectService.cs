@@ -8,6 +8,7 @@ using Educationtesttask.Domain.Entities.Account;
 using Educationtesttask.Domain.Enums;
 using Educationtesttask.Domain.Exceptions.StudentSubjects;
 using Educationtesttask.Infrastructure.Interfaces;
+using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.Data.SqlClient;
 
@@ -17,7 +18,7 @@ namespace Educationtesttask.Application.Services.StudentSubjects
 	{
 		private readonly IStudentSubjectRepository studentSubjectRepository;
 		private readonly ISerilogLogger logger;
-		private readonly StudentSubjectDtoValidation validator;
+		private readonly IValidator<StudentSubjectDto> validator;
 		private readonly IHttpContextCurrentUserProvider httpContextCurrentUserProvider;
 
 		public StudentSubjectService(IStudentSubjectRepository studentSubjectRepository, 
@@ -47,7 +48,7 @@ namespace Educationtesttask.Application.Services.StudentSubjects
 					throw new NullStudentSubjectException();
 				}
 
-				ValidationResult validationResult = validator.Validate(viewModel);
+				ValidationResult validationResult = await this.validator.ValidateAsync(viewModel);
 				Validate(validationResult);
 
 				var studentSubject = new StudentSubject()
@@ -153,7 +154,7 @@ namespace Educationtesttask.Application.Services.StudentSubjects
 					throw new NullStudentSubjectException();
 				}
 
-				ValidationResult validationResult = validator.Validate(viewModel);
+				ValidationResult validationResult = await this.validator.ValidateAsync(viewModel);
 				Validate(validationResult);
 
 				StudentSubject existingStudentSubject = await this.studentSubjectRepository.SelectByIdAsync(viewModel.SubjectId, Guid.NewGuid());
