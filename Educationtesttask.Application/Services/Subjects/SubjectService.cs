@@ -2,11 +2,10 @@
 using Educationtesttask.Application.Interfaces;
 using Educationtesttask.Application.Logging;
 using Educationtesttask.Application.Validations.Subjects;
-using Educationtesttask.Application.ViewModels.Subjects;
+using Educationtesttask.Domain.DTOs.Subjects;
 using Educationtesttask.Domain.Entities;
 using Educationtesttask.Domain.Entities.Account;
 using Educationtesttask.Domain.Enums;
-using Educationtesttask.Domain.Exceptions.Students;
 using Educationtesttask.Domain.Exceptions.Subjects;
 using Educationtesttask.Infrastructure.Interfaces;
 using FluentValidation;
@@ -35,7 +34,7 @@ namespace Educationtesttask.Application.Services.Subjects
 			this.httpContextCurrentUserProvider = httpContextCurrentUserProvider;
 		}
 
-		public async Task<Subject> AddAsync(SubjectCreateViewModel viewModel)
+		public async Task<Subject> AddAsync(SubjectCreateDto viewModel)
 		{
 			try
 			{
@@ -159,7 +158,7 @@ namespace Educationtesttask.Application.Services.Subjects
 			}
 		}
 
-		public async Task<Subject> ModifyAsync(SubjectUpdateViewModel viewModel)
+		public async Task<Subject> ModifyAsync(SubjectUpdateDto viewModel)
 		{
 			try
 			{

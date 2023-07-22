@@ -2,7 +2,7 @@
 using Educationtesttask.Application.Interfaces;
 using Educationtesttask.Application.Logging;
 using Educationtesttask.Application.Validations.Teachers;
-using Educationtesttask.Application.ViewModels.Teachers;
+using Educationtesttask.Domain.DTOs.Teachers;
 using Educationtesttask.Domain.Entities;
 using Educationtesttask.Domain.Entities.Account;
 using Educationtesttask.Domain.Enums;
@@ -39,7 +39,7 @@ namespace Educationtesttask.Application.Services
 			this.httpContextCurrentUserProvider = httpContextCurrentUserProvider;
 		}
 
-		public async Task<Teacher> AddAsync(TeacherCreateViewModel viewModel)
+		public async Task<Teacher> AddAsync(TeacherCreateDto viewModel)
 		{
 			try
 			{
@@ -152,7 +152,7 @@ namespace Educationtesttask.Application.Services
 			}
 		}
 
-		public async Task<Teacher> ModifyAsync(TeacherUpdateViewModel viewModel)
+		public async Task<Teacher> ModifyAsync(TeacherUpdateDto viewModel)
 		{
 			try
 			{

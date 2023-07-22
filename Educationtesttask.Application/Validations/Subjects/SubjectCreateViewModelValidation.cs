@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Educationtesttask.Application.ViewModels.Subjects;
+﻿using Educationtesttask.Domain.DTOs.Subjects;
 using FluentValidation;
 
 namespace Educationtesttask.Application.Validations.Subjects
 {
-	public class SubjectCreateViewModelValidation : AbstractValidator<SubjectCreateViewModel>
+    public class SubjectCreateViewModelValidation : AbstractValidator<SubjectCreateDto>
 	{
 		public SubjectCreateViewModelValidation()
 		{

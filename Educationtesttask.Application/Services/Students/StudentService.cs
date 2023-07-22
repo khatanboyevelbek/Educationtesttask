@@ -2,7 +2,7 @@
 using Educationtesttask.Application.Interfaces;
 using Educationtesttask.Application.Logging;
 using Educationtesttask.Application.Validations.Students;
-using Educationtesttask.Application.ViewModels.Students;
+using Educationtesttask.Domain.DTOs.Students;
 using Educationtesttask.Domain.Entities;
 using Educationtesttask.Domain.Entities.Account;
 using Educationtesttask.Domain.Enums;
@@ -36,7 +36,7 @@ namespace Educationtesttask.Application.Services
 			this.httpContextCurrentUserProvider = httpContextCurrentUserProvider;
 		}
 
-		public async Task<Student> AddAsync(StudentCreateViewModel viewModel)
+		public async Task<Student> AddAsync(StudentCreateDto viewModel)
 		{
 			try
 			{
@@ -45,8 +45,8 @@ namespace Educationtesttask.Application.Services
 					throw new NullStudentException();
 				}
 
-				ValidationResult validationResult = validatorCreate.Validate(viewModel);
-				Validate(validationResult);
+				//ValidationResult validationResult = validatorCreate.Validate(viewModel);
+				//Validate(validationResult);
 
 				bool existingStudent = this.studentRepository.SelectAllAsync().Any(s => s.Email == viewModel.Email);
 
@@ -153,7 +153,7 @@ namespace Educationtesttask.Application.Services
 			}
 		}
 
-		public async Task<Student> ModifyAsync(StudentUpdateViewModel viewModel)
+		public async Task<Student> ModifyAsync(StudentUpdateDto viewModel)
 		{
 			try
 			{

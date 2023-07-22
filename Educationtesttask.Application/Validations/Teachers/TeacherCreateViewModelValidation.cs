@@ -1,9 +1,9 @@
-﻿using Educationtesttask.Application.ViewModels.Teachers;
+﻿using Educationtesttask.Domain.DTOs.Teachers;
 using FluentValidation;
 
 namespace Educationtesttask.Application.Validations.Teachers
 {
-    public class TeacherCreateViewModelValidation : AbstractValidator<TeacherCreateViewModel>
+    public class TeacherCreateViewModelValidation : AbstractValidator<TeacherCreateDto>
     {
         public TeacherCreateViewModelValidation()
         {

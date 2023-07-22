@@ -1,5 +1,5 @@
 ﻿using Educationtesttask.Application.Interfaces;
-using Educationtesttask.Application.ViewModels.Students;
+using Educationtesttask.Domain.DTOs.Students;
 using Educationtesttask.Domain.Enums;
 using Educationtesttask.Domain.Exceptions.Students;
 using Microsoft.AspNetCore.Authorization;
@@ -19,7 +19,7 @@ namespace Educationtesttask.Api.Controllers.Students
 
 		[AllowAnonymous]
 		[HttpPost]
-		public async Task<ActionResult> PostStudent(StudentCreateViewModel viewModel)
+		public async Task<ActionResult> PostStudent(StudentCreateDto viewModel)
 		{
 			try
 			{
@@ -199,7 +199,7 @@ namespace Educationtesttask.Api.Controllers.Students
 
 		[Authorize(Roles = nameof(Role.Student))]
 		[HttpPut]
-		public async Task<ActionResult> PutStudent(StudentUpdateViewModel viewModel)
+		public async Task<ActionResult> PutStudent(StudentUpdateDto viewModel)
 		{
 			try
 			{

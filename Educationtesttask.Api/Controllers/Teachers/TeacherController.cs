@@ -1,5 +1,5 @@
 ﻿using Educationtesttask.Application.Interfaces;
-using Educationtesttask.Application.ViewModels.Teachers;
+using Educationtesttask.Domain.DTOs.Teachers;
 using Educationtesttask.Domain.Entities;
 using Educationtesttask.Domain.Enums;
 using Educationtesttask.Domain.Exceptions.Teachers;
@@ -22,7 +22,7 @@ namespace Educationtesttask.Api.Controllers.Teachers
 
 		[AllowAnonymous]
 		[HttpPost]
-		public async Task<ActionResult> PostTeacher(TeacherCreateViewModel teacherCreateViewModel)
+		public async Task<ActionResult> PostTeacher(TeacherCreateDto teacherCreateViewModel)
 		{
 			try
 			{
@@ -176,7 +176,7 @@ namespace Educationtesttask.Api.Controllers.Teachers
 
 		[Authorize(Roles = nameof(Role.Teacher))]
 		[HttpPut]
-		public async Task<ActionResult> PutTeacher(TeacherUpdateViewModel viewModel)
+		public async Task<ActionResult> PutTeacher(TeacherUpdateDto viewModel)
 		{
 			try
 			{

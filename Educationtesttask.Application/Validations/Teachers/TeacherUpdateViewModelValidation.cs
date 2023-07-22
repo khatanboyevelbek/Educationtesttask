@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Educationtesttask.Application.ViewModels.Teachers;
+using Educationtesttask.Domain.DTOs.Teachers;
 using FluentValidation;
 
 namespace Educationtesttask.Application.Validations.Teachers
 {
-	public class TeacherUpdateViewModelValidation : AbstractValidator<TeacherUpdateViewModel>
+	public class TeacherUpdateViewModelValidation : AbstractValidator<TeacherUpdateDto>
 	{
 		public TeacherUpdateViewModelValidation() 
 		{
