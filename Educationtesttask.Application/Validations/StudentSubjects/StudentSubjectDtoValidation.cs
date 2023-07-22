@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace Educationtesttask.Application.Validations.StudentSubjects
 {
-    public class StudentSubjectViewModelValidation : AbstractValidator<StudentSubjectDto>
+    public class StudentSubjectDtoValidation : AbstractValidator<StudentSubjectDto>
 	{
-		public StudentSubjectViewModelValidation()
+		public StudentSubjectDtoValidation()
 		{
 			RuleFor(s => s.SubjectId).NotNull().NotEmpty()
 				.WithMessage("Please provide the Id of valid subject");

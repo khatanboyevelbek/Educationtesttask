@@ -18,13 +18,13 @@ namespace Educationtesttask.Application.Services.Subjects
 	{
 		private readonly ISubjectRepository subjectRepository;
 		private readonly ISerilogLogger logger;
-		private readonly SubjectCreateViewModelValidation validatorCreate;
-		private readonly SubjectUpdateViewModelValidation validatorUpdate;
+		private readonly SubjectCreateDtoValidation validatorCreate;
+		private readonly SubjectUpdateDtoValidation validatorUpdate;
 		private readonly IHttpContextCurrentUserProvider httpContextCurrentUserProvider;
 
 		public SubjectService(ISubjectRepository subjectRepository, ISerilogLogger logger, 
-			SubjectCreateViewModelValidation validatorCreate, 
-			SubjectUpdateViewModelValidation validatorUpdate,
+			SubjectCreateDtoValidation validatorCreate, 
+			SubjectUpdateDtoValidation validatorUpdate,
 			IHttpContextCurrentUserProvider httpContextCurrentUserProvider)
 		{
 			this.subjectRepository = subjectRepository;

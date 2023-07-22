@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace Educationtesttask.Application.Validations.Teachers
 {
-    public class TeacherCreateViewModelValidation : AbstractValidator<TeacherCreateDto>
+    public class TeacherCreateDtoValidation : AbstractValidator<TeacherCreateDto>
     {
-        public TeacherCreateViewModelValidation()
+        public TeacherCreateDtoValidation()
         {
             RuleFor(tvm => tvm.FirstName).NotNull().NotEmpty()
                 .WithMessage("Please provide a valid firstname");

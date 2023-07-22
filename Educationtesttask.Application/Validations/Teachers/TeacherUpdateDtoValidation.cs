@@ -8,9 +8,9 @@ using FluentValidation;
 
 namespace Educationtesttask.Application.Validations.Teachers
 {
-	public class TeacherUpdateViewModelValidation : AbstractValidator<TeacherUpdateDto>
+	public class TeacherUpdateDtoValidation : AbstractValidator<TeacherUpdateDto>
 	{
-		public TeacherUpdateViewModelValidation() 
+		public TeacherUpdateDtoValidation() 
 		{
 			RuleFor(tvm => tvm.Id).NotNull().NotEmpty()
 				.WithMessage("Please provide the Id of an existing teacher");

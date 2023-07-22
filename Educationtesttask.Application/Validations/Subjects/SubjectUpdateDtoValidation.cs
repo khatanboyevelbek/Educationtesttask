@@ -8,9 +8,9 @@ using FluentValidation;
 
 namespace Educationtesttask.Application.Validations.Subjects
 {
-	public class SubjectUpdateViewModelValidation : AbstractValidator<SubjectUpdateDto>
+	public class SubjectUpdateDtoValidation : AbstractValidator<SubjectUpdateDto>
 	{
-		public SubjectUpdateViewModelValidation() 
+		public SubjectUpdateDtoValidation() 
 		{
 			RuleFor(s => s.Id).NotNull().NotEmpty()
 			   .WithMessage("Please provide the Id of an existing subject");

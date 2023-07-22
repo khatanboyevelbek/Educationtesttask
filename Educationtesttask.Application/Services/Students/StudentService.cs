@@ -8,6 +8,7 @@ using Educationtesttask.Domain.Entities.Account;
 using Educationtesttask.Domain.Enums;
 using Educationtesttask.Domain.Exceptions.Students;
 using Educationtesttask.Infrastructure.Interfaces;
+using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.Data.SqlClient;
 
@@ -17,14 +18,14 @@ namespace Educationtesttask.Application.Services
 	{
 		private readonly IStudentRepository studentRepository;
 		private readonly ISerilogLogger logger;
-		private readonly StudentCreateViewModelValidation validatorCreate;
-		private readonly StudentUpdateViewModelValidation validatorUpdate;
+		private readonly IValidator<StudentCreateDto> validatorCreate;
+		private readonly IValidator<StudentUpdateDto> validatorUpdate;
 		private readonly ISecurityPassword securityPassword;
 		private readonly IHttpContextCurrentUserProvider httpContextCurrentUserProvider;
 
 		public StudentService(IStudentRepository studentRepository, ISerilogLogger logger,
-			StudentCreateViewModelValidation validatorCreate,
-			StudentUpdateViewModelValidation validatorUpdate, 
+            IValidator<StudentCreateDto> validatorCreate,
+            IValidator<StudentUpdateDto> validatorUpdate,
 			ISecurityPassword securityPassword,
 			IHttpContextCurrentUserProvider httpContextCurrentUserProvider)
 		{
@@ -45,8 +46,8 @@ namespace Educationtesttask.Application.Services
 					throw new NullStudentException();
 				}
 
-				//ValidationResult validationResult = validatorCreate.Validate(viewModel);
-				//Validate(validationResult);
+				ValidationResult validationResult = await this.validatorCreate.ValidateAsync(viewModel);
+				Validate(validationResult);
 
 				bool existingStudent = this.studentRepository.SelectAllAsync().Any(s => s.Email == viewModel.Email);
 
@@ -75,17 +76,17 @@ namespace Educationtesttask.Application.Services
 				return addeddData;
 
 			}
-			catch (InvalidStudentException invalidStudentException)
+            catch (NullStudentException nullStudentException)
+            {
+                this.logger.LogError(nullStudentException);
+
+                throw new StudentValidationException(nullStudentException);
+            }
+            catch (InvalidStudentException invalidStudentException)
 			{
 				this.logger.LogError(invalidStudentException);
 
 				throw new StudentValidationException(invalidStudentException);
-			}
-			catch (NullStudentException nullStudentException)
-			{
-				this.logger.LogError(nullStudentException);
-
-				throw new StudentValidationException(nullStudentException);
 			}
 			catch (AlreadyExistStudentException alreadyExistStudentException)
 			{
@@ -169,7 +170,7 @@ namespace Educationtesttask.Application.Services
 					throw new NullStudentException();
 				}
 
-				ValidationResult validationResult = validatorUpdate.Validate(viewModel);
+				ValidationResult validationResult = await this.validatorUpdate.ValidateAsync(viewModel);
 				Validate(validationResult);
 
 				var retrieveExistingStudent = await this.studentRepository.SelectByIdAsync(viewModel.Id);

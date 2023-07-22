@@ -11,9 +11,11 @@ using Educationtesttask.Application.Validations.Students;
 using Educationtesttask.Application.Validations.StudentSubjects;
 using Educationtesttask.Application.Validations.Subjects;
 using Educationtesttask.Application.Validations.Teachers;
+using Educationtesttask.Domain.DTOs.Students;
 using Educationtesttask.Infrastructure.Data;
 using Educationtesttask.Infrastructure.Interfaces;
 using Educationtesttask.Infrastructure.Repositories;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -55,12 +57,14 @@ namespace Educationtesttask.Api
 				app.UseSwaggerUI();
 			}
 
-			app.UseSerilogRequestLogging();
+            app.UseSerilogRequestLogging();
 			app.UseCors("AllowAll");
 			app.UseHttpsRedirection();
 			app.UseAuthentication();
 			app.UseAuthorization();
-			app.MapControllers();
+            ValidatorOptions.Global.LanguageManager.Enabled = true;
+            ValidatorOptions.Global.LanguageManager.Culture = new System.Globalization.CultureInfo("en-US");
+            app.MapControllers();
 
 			app.Run();
 		}
@@ -82,13 +86,13 @@ namespace Educationtesttask.Api
 		private static void RegisterUtilities(IServiceCollection services)
 		{
 			services.AddScoped<ISerilogLogger, SerilogLogger>();
-			services.AddTransient<TeacherCreateViewModelValidation>();
-			services.AddTransient<TeacherUpdateViewModelValidation>();
-			services.AddTransient<StudentCreateViewModelValidation>();
-			services.AddTransient<StudentUpdateViewModelValidation>();
-			services.AddTransient<SubjectCreateViewModelValidation>();
-			services.AddTransient<SubjectUpdateViewModelValidation>();
-			services.AddTransient<StudentSubjectViewModelValidation>();
+			services.AddTransient<TeacherCreateDtoValidation>();
+			services.AddTransient<TeacherUpdateDtoValidation>();
+			services.AddTransient<IValidator<StudentCreateDto>, StudentCreateDtoValidation>();
+			services.AddTransient<IValidator<StudentUpdateDto>, StudentUpdateDtoValidation>();
+			services.AddTransient<SubjectCreateDtoValidation>();
+			services.AddTransient<SubjectUpdateDtoValidation>();
+			services.AddTransient<StudentSubjectDtoValidation>();
 			services.AddTransient<LoginModelValidation>();
 		}
 		private static void RegisterServices(IServiceCollection services)

@@ -18,16 +18,16 @@ namespace Educationtesttask.Application.Services
 	{
 		private readonly ISerilogLogger logger;
 		private readonly ITeacherRepository teacherRepository;
-		private readonly TeacherCreateViewModelValidation validatorCreate;
-		private readonly TeacherUpdateViewModelValidation validatorUpdate;
+		private readonly TeacherCreateDtoValidation validatorCreate;
+		private readonly TeacherUpdateDtoValidation validatorUpdate;
 		private readonly ISecurityPassword securityPassword;
 		private readonly IHttpContextCurrentUserProvider httpContextCurrentUserProvider;
 
 
 		public TeacherService (ISerilogLogger logger,
 			ITeacherRepository teacherRepository,
-			TeacherCreateViewModelValidation validatorCreate,
-			TeacherUpdateViewModelValidation validatorUpdate,
+			TeacherCreateDtoValidation validatorCreate,
+			TeacherUpdateDtoValidation validatorUpdate,
 			ISecurityPassword securityPassword,
 			IHttpContextCurrentUserProvider httpContextCurrentUserProvider)
 		{
