@@ -12,6 +12,7 @@ using Educationtesttask.Application.Validations.StudentSubjects;
 using Educationtesttask.Application.Validations.Subjects;
 using Educationtesttask.Application.Validations.Teachers;
 using Educationtesttask.Domain.DTOs.Students;
+using Educationtesttask.Domain.Entities.Account;
 using Educationtesttask.Infrastructure.Data;
 using Educationtesttask.Infrastructure.Interfaces;
 using Educationtesttask.Infrastructure.Repositories;
@@ -93,7 +94,7 @@ namespace Educationtesttask.Api
 			services.AddTransient<SubjectCreateDtoValidation>();
 			services.AddTransient<SubjectUpdateDtoValidation>();
 			services.AddTransient<StudentSubjectDtoValidation>();
-			services.AddTransient<LoginModelValidation>();
+			services.AddTransient<IValidator<LoginModel>, LoginModelValidation>();
 		}
 		private static void RegisterServices(IServiceCollection services)
 		{

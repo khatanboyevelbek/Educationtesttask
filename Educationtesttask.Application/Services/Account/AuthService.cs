@@ -10,6 +10,7 @@ using Educationtesttask.Domain.Entities;
 using Educationtesttask.Domain.Entities.Account;
 using Educationtesttask.Domain.Exceptions.Account;
 using Educationtesttask.Infrastructure.Interfaces;
+using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -22,7 +23,7 @@ namespace Educationtesttask.Application.Services.Account
 		private readonly ITeacherRepository teacherRepository;
 		private readonly IAuthManager authManager;
 		private readonly ISecurityPassword securityPassword;
-		private readonly LoginModelValidation validator;
+		private readonly IValidator<LoginModel> validator;
 		private readonly ISerilogLogger logger;
 
 		public AuthService(IStudentRepository studentRepository, 
