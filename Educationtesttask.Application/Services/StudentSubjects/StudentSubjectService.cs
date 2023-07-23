@@ -22,7 +22,7 @@ namespace Educationtesttask.Application.Services.StudentSubjects
 		private readonly IHttpContextCurrentUserProvider httpContextCurrentUserProvider;
 
 		public StudentSubjectService(IStudentSubjectRepository studentSubjectRepository, 
-			ISerilogLogger logger, StudentSubjectDtoValidation validator,
+			ISerilogLogger logger, IValidator<StudentSubjectDto> validator,
 			IHttpContextCurrentUserProvider httpContextCurrentUserProvider)
 		{
 			this.studentSubjectRepository = studentSubjectRepository;

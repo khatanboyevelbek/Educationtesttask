@@ -12,7 +12,7 @@ namespace Educationtesttask.Application.Validations.StudentSubjects
 			RuleFor(s => s.SubjectId)
 				.NotEmpty()
 				.MustAsync(async (request, id, cancellationToken) =>
-					await subjectRepository.SelectAllAsync().AnyAsync(s => s.Id == request.SubjectId))
+					await subjectRepository.SelectAllAsync().AnyAsync(s => s.Id == request.SubjectId, cancellationToken))
 				.WithMessage("Subject with subjectId is not found in the system");
 
 			RuleFor(s => s.Grade)

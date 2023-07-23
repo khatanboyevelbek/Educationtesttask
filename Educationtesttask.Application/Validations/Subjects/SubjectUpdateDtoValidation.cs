@@ -17,7 +17,7 @@ namespace Educationtesttask.Application.Validations.Subjects
 			RuleFor(s => s.Id)
 			   .NotEmpty()
 			   .MustAsync(async (request, id, cancellationToken) =>
-					await subjectRepository.SelectAllAsync().AnyAsync(s => s.Id == request.Id))
+					await subjectRepository.SelectAllAsync().AnyAsync(s => s.Id == request.Id, cancellationToken))
 			   .WithMessage("Please provide the Id of an existing subject");
 
 			RuleFor(s => s.Name).NotNull().NotEmpty()

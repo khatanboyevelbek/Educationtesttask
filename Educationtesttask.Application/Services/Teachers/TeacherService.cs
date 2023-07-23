@@ -26,8 +26,8 @@ namespace Educationtesttask.Application.Services
 
 		public TeacherService (ISerilogLogger logger,
 			ITeacherRepository teacherRepository,
-			TeacherCreateDtoValidation validatorCreate,
-			TeacherUpdateDtoValidation validatorUpdate,
+            IValidator<TeacherCreateDto> validatorCreate,
+            IValidator<TeacherUpdateDto> validatorUpdate,
 			ISecurityPassword securityPassword,
 			IHttpContextCurrentUserProvider httpContextCurrentUserProvider)
 		{

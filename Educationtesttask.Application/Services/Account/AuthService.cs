@@ -28,7 +28,7 @@ namespace Educationtesttask.Application.Services.Account
 
 		public AuthService(IStudentRepository studentRepository, 
 			ITeacherRepository teacherRepository, IAuthManager authManager, 
-			ISecurityPassword securityPassword, LoginModelValidation validator,
+			ISecurityPassword securityPassword, IValidator<LoginModel> validator,
 			ISerilogLogger logger)
 		{
 			this.studentRepository = studentRepository;
@@ -48,7 +48,7 @@ namespace Educationtesttask.Application.Services.Account
 					throw new NullLoginModelException();
 				}
 
-				ValidationResult validationResult = this.validator.Validate(loginModel);
+				ValidationResult validationResult = await this.validator.ValidateAsync(loginModel);
 				Validate(validationResult);
 
 				Student existingStudent = await this.studentRepository.SelectStudentByEmail(loginModel.Email);
@@ -110,7 +110,7 @@ namespace Educationtesttask.Application.Services.Account
 					throw new NullLoginModelException();
 				}
 
-				ValidationResult validationResult = this.validator.Validate(loginModel);
+				ValidationResult validationResult = await this.validator.ValidateAsync(loginModel);
 				Validate(validationResult);
 
 				Teacher existingTeacher = await this.teacherRepository.SelectTeacherByEmail(loginModel.Email);

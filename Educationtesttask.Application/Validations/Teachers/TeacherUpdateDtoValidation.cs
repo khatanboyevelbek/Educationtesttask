@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Educationtesttask.Domain.DTOs.Teachers;
 using Educationtesttask.Infrastructure.Interfaces;
@@ -17,7 +18,7 @@ namespace Educationtesttask.Application.Validations.Teachers
 			RuleFor(tvm => tvm.Id)
 				.NotEmpty()
 				.MustAsync(async (request, id, cancellationToken) =>
-					await teacherRepository.SelectAllAsync().AnyAsync(t => t.Id == request.Id))
+					await teacherRepository.SelectAllAsync().AnyAsync(t => t.Id == request.Id, cancellationToken))
 				.WithMessage("Please provide the Id of an existing teacher");
 
             RuleFor(tvm => tvm.LastName)

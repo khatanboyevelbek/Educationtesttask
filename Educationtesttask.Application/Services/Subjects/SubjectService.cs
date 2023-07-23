@@ -22,9 +22,9 @@ namespace Educationtesttask.Application.Services.Subjects
 		private readonly IValidator<SubjectUpdateDto> validatorUpdate;
 		private readonly IHttpContextCurrentUserProvider httpContextCurrentUserProvider;
 
-		public SubjectService(ISubjectRepository subjectRepository, ISerilogLogger logger, 
-			SubjectCreateDtoValidation validatorCreate, 
-			SubjectUpdateDtoValidation validatorUpdate,
+		public SubjectService(ISubjectRepository subjectRepository, ISerilogLogger logger,
+            IValidator<SubjectCreateDto> validatorCreate,
+            IValidator<SubjectUpdateDto> validatorUpdate,
 			IHttpContextCurrentUserProvider httpContextCurrentUserProvider)
 		{
 			this.subjectRepository = subjectRepository;
